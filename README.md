@@ -1,4 +1,4 @@
-# double_LL_dynamic_array
+# double_Linked_List_dynamic_array
 Doubly linked list to simulate a dynamically growing array
 -----------------------------------------------------------
 * int dai(char *action, int index, int value) //d[ynamic]a[rray]i[nteger]
