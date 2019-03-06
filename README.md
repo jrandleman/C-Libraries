@@ -1,10 +1,14 @@
 # doubly_Linked_List_dynamic_array
 Doubly linked list to simulate a dynamically growing array
 -----------------------------------------------------------
-* int dai(char *action, int index, int value) //d[ynamic]a[rray]i[nteger]
-* Actions:
-  * 'a'dd (add value at index)
-  * 'd'elete (delete index, pass -index to traverse reversely)
-  * 's'wap (replace element at index with value)
-  * 'g'et (return element at index, pass -index to traverse reversely)
-  * 'l'ength (return length of filled cells)
+ * =================================================================
+ * FUNCTION PROTOTYPES: _actionDatatype(array_name, index, value)
+ * =================================================================
+ * ACTIONS: 'a'dd - 'd'elete - 's'wap - 'g'et - 'l'ength
+ * DATA TYPES: 'i'nt - 'c'har
+ * =============================================================
+     * void _ai(DYN_ARR *, int, int); /* + index, value */
+     * int _di(DYN_ARR *, int); /* +- index */
+     * int _si(DYN_ARR *, int, int); /* index, newValue */
+     * int _gi(DYN_ARR *, int); /* +- index */
+     * int _li(DYN_ARR *);
