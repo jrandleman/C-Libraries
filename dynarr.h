@@ -90,9 +90,36 @@ int _lc(DYN_ARR *u_da) {
 	return count;
 }
 /******************************************************************************
-* 'G'ET ==> return: index's elem true or 96969/"XQXQX" DNE ==> -index backwards
+* 'I'NDEX ==> return: first index with element true, -1 DNE
 ******************************************************************************/
-int _gi(DYN_ARR *u_da, int index) {
+int _ii(DYN_ARR *u_da, int value) {
+	int count = 0;
+	DYNI *p = u_da -> headi;
+	if(p != NULL) {
+		while(p -> nixt != NULL) {
+			if(p -> elim == value) return count;
+			count++;
+			p = p -> nixt;
+		}
+	}
+	return -1;
+}
+int _ic(DYN_ARR *u_da, char *value) {
+	int count = 0;
+	DYNC *p = u_da -> headc;
+	if(p != NULL) {
+		while(p -> nixt != NULL) {
+			if(strcmp(p -> elim, value) == 0) return count;
+			count++;
+			p = p -> nixt;
+		}
+	}
+	return -1;
+}
+/******************************************************************************
+* 'E'LEM ==> return: index's elem true, 96969/"XQXQX" DNE ==> -index backwards
+******************************************************************************/
+int _ei(DYN_ARR *u_da, int index) {
 	int count = 0, i;
 	DYNI *p;
 	if(u_da -> headi == NULL) return 96969;
@@ -111,7 +138,7 @@ int _gi(DYN_ARR *u_da, int index) {
 	}
 	return u_da -> headi -> elim; /* index = 0 means return headi elem */
 }
-char* _gc(DYN_ARR *u_da, int index) {
+char* _ec(DYN_ARR *u_da, int index) {
 	int count = 0, i;
 	DYNC *p;
 	if(u_da -> headc == NULL) return "XQXQX";
@@ -149,6 +176,25 @@ int _pc(DYN_ARR *u_da, int index, char *value) {
 		if(p == NULL || p == u_da -> tailc) return 0;
 	if(p == NULL || p == u_da -> tailc) return 0;
 	p -> elim = value;
+	return 1;
+}
+/******************************************************************************
+* 'S'WAP ==> swap idx1 & idx2 elements, return: 1 true, 0 DNE
+******************************************************************************/
+int _si(DYN_ARR *u_da, int idx1, int idx2) {
+	int value1 = _ei(u_da, idx1);
+	if(value1 == 96969) return 0;
+	int value2 = _ei(u_da, idx2);
+	if(value2 == 96969) return 0;
+	if(_pi(u_da, idx1, value2) == 0 || _pi(u_da, idx2, value1) == 0) return 0;
+	return 1;
+}
+int _sc(DYN_ARR *u_da, int idx1, int idx2) {
+	char *value1 = _ec(u_da, idx1);
+	if(strcmp(value1, "XQXQX") == 0) return 0;
+	char *value2 = _ec(u_da, idx2);
+	if(strcmp(value2, "XQXQX") == 0) return 0;
+	if(_pc(u_da, idx1, value2) == 0 || _pc(u_da, idx2, value1) == 0) return 0;
 	return 1;
 }
 /******************************************************************************
