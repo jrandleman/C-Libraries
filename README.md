@@ -8,6 +8,11 @@ Doubly linked list to simulate a dynamically growing array
 **Then initialize "user_array_name" as per 'I'nt or 'C'har array:**
  1) I_DYN_ARR_INIT(user_array_name);
  2) C_DYN_ARR_INIT(user_array_name);
+ 
+ 
+**Wipe mallocs before ending program as per 'I'nt or 'C'har array:**
+ 1) I_DYN_ARR_WIPE(user_array_name);
+ 2) C_DYN_ARR_WIPE(user_array_name);
 
  * **===============================================================**
  * **FUNCTION PROTOTYPES: _actionDatatype(user_array_name, index, value)**
