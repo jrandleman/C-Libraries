@@ -17,31 +17,41 @@ Doubly linked list to simulate a dynamically growing array
  * **===============================================================**
  * **FUNCTION PROTOTYPES: _actionDatatype(user_array_name, index, value)**
  * **===============================================================**
- * **ACTIONS: 'a'dd - 'd'elete - 'p'ut - 'g'et - 'l'ength**
+ * **ACTIONS: 'a'dd - 'd'elete - 'p'ut - 'l'ength - 'e'lem - 'i'ndex - 's'wap**
  * **DATA TYPES: 'i'nt - 'c'har**
  * **===============================================================**
 
-**ADD:**
+**ADD (*insert new cell*):**
 * void _ai(DYN_ARR *, int, int);
 * void _ac(DYN_ARR *, int, char *);
     * _ai(user_array_name, 0, 5);
 
-**DELETE:**
+**DELETE (*remove cell*):**
 * int _di(DYN_ARR *, int);
 * int _dc(DYN_ARR *, int);
     * _di(user_array_name, 0);
 
-**PUT:**
+**PUT (*edit existing cell*):**
 * int _pi(DYN_ARR *, int, int);
 * int _pc(DYN_ARR *, int, char *);
     * _pi(user_array_name, 0, 3);
 
-**GET:**
-* int _gi(DYN_ARR *, int);
-* char* _gc(DYN_ARR *, int);
-    * _gi(user_array_name, 0);
-
-**LENGTH:**
+**LENGTH (*get array length*):**
 * int _li(DYN_ARR *);
 * int _lc(DYN_ARR *);
     * li(user_array_name);
+
+**ELEM (*get element at an index*):**
+* int _ei(DYN_ARR *, int);
+* char* _ec(DYN_ARR *, int);
+    * _ei(user_array_name, 0);
+
+**INDEX (*get first index of an element*):**
+* int _ii(DYN_ARR *, int);
+* char* _ic(DYN_ARR *, char *);
+    * _ii(user_array_name, 0);
+
+**SWAP (*swap two cell positions*):**
+* int _si(DYN_ARR *, int, int);
+* int _sc(DYN_ARR *, int, int);
+    * _si(user_array_name, 0, 1);
