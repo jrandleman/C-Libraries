@@ -162,9 +162,9 @@ int _dc(DYN_ARR *u_da, int index) {
 	return 1;
 }
 /******************************************************************************
-* 'S'WAP ==> swap index's element with new value, return: 1 true, 0 DNE
+* 'P'UT ==> put new value as index's element, return: 1 true, 0 DNE
 ******************************************************************************/
-int _si(DYN_ARR *u_da, int index, int value) {
+int _pi(DYN_ARR *u_da, int index, int value) {
 	int count = 0, i;
 	DYNI *p = u_da -> headi;
 	for(i = 0; i < index; i++, p = p -> nixt)
@@ -173,7 +173,7 @@ int _si(DYN_ARR *u_da, int index, int value) {
 	p -> elim = value;
 	return 1;
 }
-int _sc(DYN_ARR *u_da, int index, char *value) {
+int _pc(DYN_ARR *u_da, int index, char *value) {
 	int count = 0, i;
 	DYNC *p = u_da -> headc;
 	for(i = 0; i < index; i++, p = p -> nixt)
