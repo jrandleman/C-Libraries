@@ -1,5 +1,4 @@
 /* AUTHOR: JORDAN RANDLEMAN -:- USE LL TO SIMULATE DYNAMIC ARRAY CREATION */
-#include <stdio.h> /* NO NEED IN .h FILE */
 #include <stdlib.h>
 #include <string.h>
 
@@ -275,35 +274,4 @@ void _ac(DYN_ARR *u_da, int index, char *value) {
 	q -> priv -> nixt = p;
 	q -> priv = p;
 	return;
-}
-
-int main() {
-	/* USER-DEFINED DYNAMIC ARRAY */
-	DYN_ARR x[2], y[2];
-
-	/* INITIALIZE DEFINED DYNAMIC ARRAYS */
-	I_DYN_ARR_INIT(x);
-	C_DYN_ARR_INIT(y);
-
-	_ai(x,0,6); /* 'a'dd 6 to index 0 in array x */
-	_ai(x,1,5); /* 'a'dd 5 to index 1 in array x */
-	_di(x,0); /* 'd'elete index 0 in array x */
-	printf("%d\n", _gi(x,0)); /* 'g'et new element at index 0 in array x to printf*/
-	_ai(x,3,9); /* 'a'dd 9 to index 3 */
-	printf("%d\n", _gi(x,3)); /* 'g'et element at index 3 in array x to printf */
-	_si(x,3,4); /* 's'wap element at index 3 with value 4 in array x */
-	printf("%d\n", _gi(x,3)); /* 'g'et element at index 3 in array x to printf */
-	_di(x,3); /* 'd'elete index 3 */
-	printf("%d\n", _li(x)); /* printf 'l'ength of filled cells (empty non-inclusive) in array x */
-
-	_ai(y,0,6); /* 'a'dd 6 to index 0 in array y */
-	printf("%d\n", _gi(y,0)); /* 'g'et new element at index 0 in array y to printf */
-
-	_ac(y,0,"hello"); /* 'a'dd 'dude' to index 0 in array y */
-	_ac(y,2,"my");
-	printf("%s, %s, length: %d\n", _gc(y,0), _gc(y,2), _lc(y)); /* 'g'et new element at index 0 in array y to printf */
-	_dc(y,2);
-	_ac(y,2,"guy");
-	printf("%s\n",_gc(y,2));
-	return 0;
 }
