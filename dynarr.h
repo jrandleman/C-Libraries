@@ -29,6 +29,40 @@ void C_DYN_ARR_INIT(DYN_ARR *u_da) {
 	u_da -> tailc = NULL;
 	return; /* if char arr, init post declare C_DYN_ARR_INIT(userDynArrName) */
 }
+void I_DYN_ARR_WIPE(DYN_ARR *u_da) {
+	if(u_da -> headi != NULL) {
+		DYNI *q = u_da -> taili;
+		while(q -> priv != NULL) {
+			DYNI *p = q;
+			q = q -> priv;
+			q -> nixt = NULL;
+			p -> priv = NULL;
+			free(p);
+		}
+		u_da -> headi = NULL;
+	}
+	u_da -> taili = NULL;
+	free(u_da -> headi);
+	free(u_da -> taili);
+	return; /* wipe when done to free mallocs I_DYN_ARR_WIPE(userDynArrName) */
+}
+void C_DYN_ARR_WIPE(DYN_ARR *u_da) {
+	if(u_da -> headc != NULL) {
+		DYNC *q = u_da -> tailc;
+		while(q -> priv != NULL) {
+			DYNC *p = q;
+			q = q -> priv;
+			q -> nixt = NULL;
+			p -> priv = NULL;
+			free(p);
+		}
+		u_da -> headc = NULL;
+	}
+	u_da -> tailc = NULL;
+	free(u_da -> headc);
+	free(u_da -> tailc);
+	return; /* wipe when done to free mallocs C_DYN_ARR_WIPE(userDynArrName) */
+}
 /* _actionDatatype(array_name, index, value) */
 /******************************************************************************
 * 'L'ENGTH ==> return length of current LL
@@ -56,23 +90,23 @@ int _lc(DYN_ARR *u_da) {
 	return count;
 }
 /******************************************************************************
-* 'G'ET ==> return: index's element true, 40404, '\0' DNE ==> -index backwards
+* 'G'ET ==> return: index's elem true or 96969/"XQXQX" DNE ==> -index backwards
 ******************************************************************************/
 int _gi(DYN_ARR *u_da, int index) {
 	int count = 0, i;
 	DYNI *p;
-	if(u_da -> headi == NULL) return 40404;
+	if(u_da -> headi == NULL) return 96969;
 	if(index > 0) { /* traverse forwards */
 		p = u_da -> headi;
 		for(i = 0; i < index; i++, p = p -> nixt)
-			if(p == NULL || p == u_da -> taili) return 40404;
-		if(p == NULL || p == u_da -> taili || p -> elim == 314271)return 40404;
+			if(p == NULL || p == u_da -> taili) return 96969;
+		if(p == NULL || p == u_da -> taili || p -> elim == 80808)return 96969;
 		return p -> elim;
 	} else if(index < 0) { /* traverse backwards */
 		p = u_da -> taili -> priv; /* tail empty : dyn node creation buffer */
 		for(i = 1; i < -index; i++, p = p -> priv)
-			if(p == NULL) return 40404;
-		if(p == NULL || p -> elim == 314271) return 40404;
+			if(p == NULL) return 96969;
+		if(p == NULL || p -> elim == 80808) return 96969;
 		return p -> elim;
 	}
 	return u_da -> headi -> elim; /* index = 0 means return headi elem */
@@ -95,6 +129,27 @@ char* _gc(DYN_ARR *u_da, int index) {
 		return p -> elim;
 	}
 	return u_da -> headc -> elim; /* index = 0 means return headc elem */
+}
+/******************************************************************************
+* 'P'UT ==> put new value as index's element, return: 1 true, 0 DNE
+******************************************************************************/
+int _pi(DYN_ARR *u_da, int index, int value) {
+	int count = 0, i;
+	DYNI *p = u_da -> headi;
+	for(i = 0; i < index; i++, p = p -> nixt)
+		if(p == NULL || p == u_da -> taili) return 0;
+	if(p == NULL || p == u_da -> taili) return 0;
+	p -> elim = value;
+	return 1;
+}
+int _pc(DYN_ARR *u_da, int index, char *value) {
+	int count = 0, i;
+	DYNC *p = u_da -> headc;
+	for(i = 0; i < index; i++, p = p -> nixt)
+		if(p == NULL || p == u_da -> tailc) return 0;
+	if(p == NULL || p == u_da -> tailc) return 0;
+	p -> elim = value;
+	return 1;
 }
 /******************************************************************************
 * 'D'ELETE ==> return: 1 true, 0 DNE ==> -index backwards
@@ -162,32 +217,11 @@ int _dc(DYN_ARR *u_da, int index) {
 	return 1;
 }
 /******************************************************************************
-* 'P'UT ==> put new value as index's element, return: 1 true, 0 DNE
-******************************************************************************/
-int _pi(DYN_ARR *u_da, int index, int value) {
-	int count = 0, i;
-	DYNI *p = u_da -> headi;
-	for(i = 0; i < index; i++, p = p -> nixt)
-		if(p == NULL || p == u_da -> taili) return 0;
-	if(p == NULL || p == u_da -> taili) return 0;
-	p -> elim = value;
-	return 1;
-}
-int _pc(DYN_ARR *u_da, int index, char *value) {
-	int count = 0, i;
-	DYNC *p = u_da -> headc;
-	for(i = 0; i < index; i++, p = p -> nixt)
-		if(p == NULL || p == u_da -> tailc) return 0;
-	if(p == NULL || p == u_da -> tailc) return 0;
-	p -> elim = value;
-	return 1;
-}
-/******************************************************************************
 * 'A'DD ==> add value at index
 ******************************************************************************/
 void _ai(DYN_ARR *u_da, int index, int value) {
-	/* EMPTY CELL STRUCTURE */
-	DYNI emptyi = { .elim = 314271, .nixt = NULL, .priv = NULL };
+	/* EMPTY CELL VALUES elimi = "80808" */
+	DYNI emptyi = { .elim = 80808, .nixt = NULL, .priv = NULL };
 	DYNI *p = (DYNI *)malloc(sizeof(DYNI));
 	p -> elim = value;
 	if(index == 0) { /* insert in front */
@@ -203,6 +237,8 @@ void _ai(DYN_ARR *u_da, int index, int value) {
 			p -> nixt = u_da -> headi;
 			u_da -> headi = p;
 		}
+		p = NULL;
+		free(p);
 		return;
 	}
 	DYNI *q = u_da -> headi;
@@ -222,6 +258,8 @@ void _ai(DYN_ARR *u_da, int index, int value) {
 			u_da -> taili -> nixt = endof;
 			endof -> priv = u_da -> taili;
 			u_da -> taili = endof;
+			endof = NULL;
+			free(endof);
 		}
 	}
 	p -> nixt = q;
@@ -248,6 +286,8 @@ void _ac(DYN_ARR *u_da, int index, char *value) {
 			p -> nixt = u_da -> headc;
 			u_da -> headc = p;
 		}
+		p = NULL;
+		free(p);
 		return;
 	}
 	DYNC *q = u_da -> headc;
@@ -267,6 +307,8 @@ void _ac(DYN_ARR *u_da, int index, char *value) {
 			u_da -> tailc -> nixt = endof;
 			endof -> priv = u_da -> tailc;
 			u_da -> tailc = endof;
+			endof = NULL;
+			free(endof);
 		}
 	}
 	p -> nixt = q;
