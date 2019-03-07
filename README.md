@@ -14,7 +14,7 @@ Doubly linked list to simulate a dynamically growing array
  * **===============================================================**
  * **ACTIONS: 'a'dd - 'd'elete - 's'wap - 'g'et - 'l'ength**
  * **DATA TYPES: 'i'nt - 'c'har**
- * **===========================================================**
+ * **===============================================================**
 
 **ADD:**
 * void _ai(DYN_ARR *, int, int);
