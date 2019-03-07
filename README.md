@@ -12,7 +12,7 @@ Doubly linked list to simulate a dynamically growing array
  * **===============================================================**
  * **FUNCTION PROTOTYPES: _actionDatatype(user_array_name, index, value)**
  * **===============================================================**
- * **ACTIONS: 'a'dd - 'd'elete - 's'wap - 'g'et - 'l'ength**
+ * **ACTIONS: 'a'dd - 'd'elete - 'p'ut - 'g'et - 'l'ength**
  * **DATA TYPES: 'i'nt - 'c'har**
  * **===============================================================**
 
@@ -26,10 +26,10 @@ Doubly linked list to simulate a dynamically growing array
 * int _dc(DYN_ARR *, int);
     * _di(user_array_name, 0);
 
-**SWAP:**
-* int _si(DYN_ARR *, int, int);
-* int _sc(DYN_ARR *, int, char *);
-    * _si(user_array_name, 0, 3);
+**PUT:**
+* int _pi(DYN_ARR *, int, int);
+* int _pc(DYN_ARR *, int, char *);
+    * _pi(user_array_name, 0, 3);
 
 **GET:**
 * int _gi(DYN_ARR *, int);
