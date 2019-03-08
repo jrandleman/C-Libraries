@@ -2,8 +2,11 @@
 Doubly linked list to simulate a dynamically growing array
 -----------------------------------------------------------
 
-**Declare locally:** 
-1) DYN_ARR user_array_name[2];
+**Include Library:**
+#include "dynarr.h"
+
+**Declare locally:**
+DYN_ARR user_array_name[2];
 
 **Then initialize "user_array_name" as per 'I'nt or 'C'har array:**
  1) I_DYN_ARR_INIT(user_array_name);
