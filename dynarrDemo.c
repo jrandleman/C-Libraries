@@ -1,5 +1,4 @@
 /* AUTHOR: JORDAN RANDLEMAN -:- DEMO PROGRAM FOR DYNAMIC ARRAY C LIBRARY */
-
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
