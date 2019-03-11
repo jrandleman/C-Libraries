@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+/* give int elements addresses before passing as args to array functions */
+#define n0(mac_num_val) ({int mac_num_address = mac_num_val;&mac_num_address;})
 
 typedef union elum {
 	int ida_val;
@@ -26,7 +28,7 @@ void DA_INIT(DYN_ARR *u_da, char u_da_type) {
 	}
 	(u_da_type == 'i' || u_da_type == 'I') ? (u_da -> da_type = 1) : (u_da -> da_type = 0);
 	u_da -> da_head = u_da -> da_tail = NULL;
-	return; /* init post declare: DA_INIT(userDynArrName, 'i''c') */
+	return; /* init post declare: DA_INIT(userDynArrName, 'i'/'c') */
 }
 void DA_DNIT(DYN_ARR *u_da) {
 	if(u_da -> da_head != NULL) {
@@ -43,7 +45,7 @@ void DA_DNIT(DYN_ARR *u_da) {
 	free(u_da -> da_head);
 	free(u_da -> da_tail);
 	return; /* free mallocs at end: DA_DNIT(userDynArrName) */
-}
+} /* wrap number elements being passed in n0(#) macro */
 /******************************************************************************
 * 'L'ENGTH ==> return length of current LL
 ******************************************************************************/
@@ -61,7 +63,7 @@ int _l(DYN_ARR *u_da) {
 /******************************************************************************
 * 'I'NDEX ==> return: first index with element true, -1 DNE
 ******************************************************************************/
-int _id(DYN_ARR *u_da, void *value) {
+int _i(DYN_ARR *u_da, void *value) {
 	int count = 0;
 	DYNA *p = u_da -> da_head;
 	if(p != NULL) {
@@ -77,64 +79,52 @@ int _id(DYN_ARR *u_da, void *value) {
 	}
 	return -1;
 }
-int _ii(DYN_ARR *u_da, int value) { return _id(u_da, &value); }
-int _ic(DYN_ARR *u_da, char *value) { return _id(u_da, value); }
 /******************************************************************************
 * 'E'LEM ==> return: index's elem true, 32202/"32202" DNE ==> -index backwards
 ******************************************************************************/
 void* _ed(DYN_ARR *u_da, int index, int elim_val_type) { 
 	int count = 0, i, err_num = 32202;
-	void *da_err = &err_num;
+	void *err_val = &err_num, *gud_val;
 	DYNA *p;
 	if(u_da -> da_head == NULL) {
 		if(elim_val_type == 2) return (void*)"32202";
-		return da_err;
+		return err_val;
 	}
 	if(index > 0) { /* traverse forwards */
 		p = u_da -> da_head;
 		for(i = 0; i < index; i++, p = p -> nixt)
 			if(p == NULL || p == u_da -> da_tail) {
 				if(elim_val_type == 2) return (void*)"32202";
-				return da_err;
+				return err_val;
 			}
 		if(p == NULL || p == u_da -> da_tail) {
 			if(elim_val_type == 1 && p -> elim.ida_val == 80808) {
-				return da_err;
+				return err_val;
 			} else if(elim_val_type == 2 && p -> elim.cda_val == '\0') {
 				return (void*)"32202";
 			}
 		}
-		if(elim_val_type == 1){
-			da_err = &(p -> elim.ida_val);
-			return da_err;
-		} else {
-			return (void*)(p -> elim.cda_val);
-		}
-		return da_err;
+		(elim_val_type == 1) ? (gud_val = n0(p -> elim.ida_val)) : (gud_val = (p -> elim.cda_val));
+		return gud_val;
 	} else if(index < 0) { /* traverse backwards */
 		p = u_da -> da_tail -> priv; /* tail empty : dyn node creation buffer */
 		for(i = 1; i < -index; i++, p = p -> priv)
 			if(p == NULL) {
 				if(elim_val_type == 2) return (void*)"32202";
-				return da_err;
+				return err_val;
 			}
 		if(p == NULL) {
 			if(elim_val_type == 1 && p -> elim.ida_val == 80808) {
-				return da_err;
+				return err_val;
 			} else if(elim_val_type == 2 && p -> elim.cda_val == '\0') {
 				return (void*)"32202";
 			}
 		}
-		if(elim_val_type == 1) {
-			da_err = &(p -> elim.ida_val);
-			return da_err;
-		} else {
-			return (void*)(p -> elim.cda_val);
-		}
+		(elim_val_type == 1) ? (gud_val = n0(p -> elim.ida_val)) : (gud_val = (p -> elim.cda_val));
+		return gud_val;
 	}
 	if(elim_val_type == 1){ /* index = 0 means return da_head elem */
-		da_err = &(u_da -> da_head -> elim.ida_val);
-		return da_err;
+		return n0(u_da -> da_head -> elim.ida_val);
 	} else {
 		return (void*)(u_da -> da_head -> elim.cda_val);
 	}
@@ -144,7 +134,7 @@ char* _ec(DYN_ARR *u_da, int index) { return _ed(u_da, index, u_da -> da_type); 
 /******************************************************************************
 * 'P'UT ==> put new value as index's element, return: 1 true, 0 DNE
 ******************************************************************************/
-int _pd(DYN_ARR *u_da, int index, void *value) {
+int _p(DYN_ARR *u_da, int index, void *value) {
 	int count = 0, i;
 	DYNA *p = u_da -> da_head;
 	for(i = 0; i < index; i++, p = p -> nixt)
@@ -157,8 +147,6 @@ int _pd(DYN_ARR *u_da, int index, void *value) {
 	}
 	return 1;
 }
-int _pi(DYN_ARR *u_da, int index, int value) { return _pd(u_da, index, &value); }
-int _pc(DYN_ARR *u_da, int index, char *value) { return _pd(u_da, index, value); }
 /******************************************************************************
 * 'S'WAP ==> swap idx1 & idx2 elements, return: 1 true, 0 DNE
 ******************************************************************************/
@@ -170,13 +158,13 @@ int _s(DYN_ARR *u_da, int idx1, int idx2) {
 		if(value1 == 32202) return 0;
 		value2 = _ei(u_da, idx2);
 		if(value2 == 32202) return 0;
-		if(_pi(u_da, idx1, value2) == 0 || _pi(u_da, idx2, value1) == 0) return 0;
+		if(_p(u_da, idx1, &value2) == 0 || _p(u_da, idx2, &value1) == 0) return 0;
 	} else {
 		val1 = _ec(u_da, idx1);
 		if(strcmp(val1, "32202") == 0) return 0;
 		val2 = _ec(u_da, idx2);
 		if(strcmp(val2, "32202") == 0) return 0;
-		if(_pc(u_da, idx1, val2) == 0 || _pc(u_da, idx2, val1) == 0) return 0;
+		if(_p(u_da, idx1, val2) == 0 || _p(u_da, idx2, val1) == 0) return 0;
 	}
 	return 1;
 }
@@ -236,7 +224,7 @@ int _d(DYN_ARR *u_da, int index) {
 /******************************************************************************
 * 'A'DD ==> add value at index
 ******************************************************************************/
-void _ad(DYN_ARR *u_da, int index, void *value) {
+void _a(DYN_ARR *u_da, int index, void *value) {
 	/* EMPTY CELL VALUES */
 	DYNA emptyi = { .nixt = NULL, .priv = NULL, .elim.ida_val = 80808 };
 	DYNA emptyc = { .nixt = NULL, .priv = NULL, .elim.cda_val = "XQXQX" };
@@ -303,5 +291,3 @@ void _ad(DYN_ARR *u_da, int index, void *value) {
 	q -> priv = p;
 	return;
 }
-void _ai(DYN_ARR *u_da, int index, int value) { _ad(u_da, index, &value); }
-void _ac(DYN_ARR *u_da, int index, char *value) { _ad(u_da, index, value); }
