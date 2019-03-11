@@ -17,40 +17,42 @@ DYN_ARR user_array_name[1];
  1) DA_DNIT(user_array_name);
 
  * **===============================================================**
- * **FUNCTION PROTOTYPES: _actionDatatype(user_array_name, index, value)**
+ * **FUNCTION PROTOTYPES: _actionDatatype(user_array_name, index, [n0(int) || char \*])**
  * **===============================================================**
  * **ACTIONS: 'a'dd - 'd'elete - 'p'ut - 'l'ength - 'e'lem - 'i'ndex - 's'wap**
- * **DATA TYPES: 'i'nt - 'c'har**
+ * **DATA TYPES: 'i'nt - 'c'har => wrap int elements with n0(#) when passing to functions**
  * **===============================================================**
 
 **ADD (*create new cell*):**
-* void _ai(DYN_ARR *, int, int);
-* void _ac(DYN_ARR *, int, char *);
-    * _ai(user_array_name, index_No, value);
+* void _a(user_array_name, index_No, [n0(int) || char *]);
+    * _a(user_array_name, 0, n0(1));
+    * _a(user_array_name, 0, "one");
 
 **DELETE (*remove cell*):**
-* int _d(DYN_ARR *, int);
-    * _d(user_array_name, index_No);
+* int _d(user_array_name, index_No);
+    * _d(user_array_name, 1);
 
 **PUT (*edit existing cell*):**
-* int _pi(DYN_ARR *, int, int);
-* int _pc(DYN_ARR *, int, char *);
-    * _pi(user_array_name, index_No, value);
+* int _p(user_array_name, index_No, [n0(int) || char *]);
+    * _p(user_array_name, 0, n0(1));
+    * _p(user_array_name, 0, "one");
 
 **LENGTH (*get array length*):**
-* int _l(DYN_ARR *);
-    * l(user_array_name);
+* int _l(user_array_name);
+    * _l(user_array_name);
 
 **ELEM (*get element at an index*):**
-* int _ei(DYN_ARR *, int);
-* char* _ec(DYN_ARR *, int);
-    * _ei(user_array_name, index_No);
+* int _ei(user_array_name, index_No);
+* char* _ec(user_array_name, index_No);
+    * _ei(user_array_name, 0);
+    * _ec(user_array_name, 0);
+* **_=> returns 32202/"32202" 'ERROR' if element DNE_** 
 
 **INDEX (*get first index of an element*):**
-* int _ii(DYN_ARR *, int);
-* char* _ic(DYN_ARR *, char *);
-    * _ii(user_array_name, value);
+* int _i(user_array_name, [n0(int) || char *]);
+    * _i(user_array_name, n0(1));
+    * _i(user_array_name, "one");
 
 **SWAP (*swap two cell positions*):**
-* int _s(DYN_ARR *, int, int);
-    * _s(user_array_name, index_No1, index_No2);
+* int _s(user_array_name, index_No1, index_No2);
+    * _s(user_array_name, 0, 1);
