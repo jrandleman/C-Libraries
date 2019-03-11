@@ -6,16 +6,15 @@ Doubly linked list to simulate a dynamically growing array
 #include "dynarr.h"
 
 **Declare locally:**
-DYN_ARR user_array_name[2];
+DYN_ARR user_array_name[1];
 
 **Then initialize "user_array_name" as per 'I'nt or 'C'har array:**
- 1) I_DYN_ARR_INIT(user_array_name);
- 2) C_DYN_ARR_INIT(user_array_name);
+ 1) DA_INIT(user_array_name, 'i');
+ 2) DA_INIT(user_array_name, 'c');
  
  
-**Wipe mallocs before ending program as per 'I'nt or 'C'har array:**
- 1) I_DYN_ARR_WIPE(user_array_name);
- 2) C_DYN_ARR_WIPE(user_array_name);
+**Deinitialize mallocs before ending program:**
+ 1) DA_DNIT(user_array_name);
 
  * **===============================================================**
  * **FUNCTION PROTOTYPES: _actionDatatype(user_array_name, index, value)**
@@ -30,9 +29,8 @@ DYN_ARR user_array_name[2];
     * _ai(user_array_name, index_No, value);
 
 **DELETE (*remove cell*):**
-* int _di(DYN_ARR *, int);
-* int _dc(DYN_ARR *, int);
-    * _di(user_array_name, index_No);
+* int _d(DYN_ARR *, int);
+    * _d(user_array_name, index_No);
 
 **PUT (*edit existing cell*):**
 * int _pi(DYN_ARR *, int, int);
@@ -40,9 +38,8 @@ DYN_ARR user_array_name[2];
     * _pi(user_array_name, index_No, value);
 
 **LENGTH (*get array length*):**
-* int _li(DYN_ARR *);
-* int _lc(DYN_ARR *);
-    * li(user_array_name);
+* int _l(DYN_ARR *);
+    * l(user_array_name);
 
 **ELEM (*get element at an index*):**
 * int _ei(DYN_ARR *, int);
@@ -55,6 +52,5 @@ DYN_ARR user_array_name[2];
     * _ii(user_array_name, value);
 
 **SWAP (*swap two cell positions*):**
-* int _si(DYN_ARR *, int, int);
-* int _sc(DYN_ARR *, int, int);
-    * _si(user_array_name, index_No1, index_No2);
+* int _s(DYN_ARR *, int, int);
+    * _s(user_array_name, index_No1, index_No2);
