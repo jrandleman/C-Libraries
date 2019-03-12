@@ -1,10 +1,12 @@
-/* AUTHOR: JORDAN RANDLEMAN -:- USE LL TO SIMULATE DYNAMIC ARRAY CREATION */
+/* AUTHOR: JORDAN RANDLEMAN -:- USE DOUBLY LL TO SIMULATE DYNAMIC ARRAY CREATION */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-/* give int elements addresses before passing as args to array functions */
+/* WRAP INT ELEMENTS BEING PASSED TO FUNCTIONS WITH n0(#) MACRO FOR ADDRESS */
 #define n0(mac_num_val) ({int mac_num_address = mac_num_val;&mac_num_address;})
-
+/******************************************************************************
+* DYNA LL NODE 'CELL' STRUCTURE W/ UNION FOR CORRESPONDING INT/CHAR DATA TYPE
+******************************************************************************/
 typedef union elum {
 	int ida_val;
 	char *cda_val;
@@ -14,13 +16,22 @@ typedef struct dyna {
 	struct dyna *priv;
 	ELUM elim;
 } DYNA;
-typedef struct dyn_arr {
+/******************************************************************************
+* MULTI/SINGLE DYNAMIC ARRAY STRUCTURES FOR LOCAL DECLARTION IN PROGRAM
+******************************************************************************/
+typedef struct dyn_ar { /* declare: DYN_AR userDynArrName[1]; */
 	DYNA *da_head;
 	DYNA *da_tail;
 	int da_type;
-} DYN_ARR; /* declare locally: DYN_ARR userDynArrName[1]; */
-
-void DA_INIT(DYN_ARR *u_da, char u_da_type) {
+} DYN_AR; 
+typedef struct dyn_mar { /* declare: DYN_MAR userDynMultiArrName[USER_SIZE]; */
+	DYN_AR d4[1];
+	int dyn_mar_size;
+} DYN_MAR; /* M(ultiple)AR(rays) ==> 2D array w/ capped columns & infin rows */
+/******************************************************************************
+* INIT/DEINIT FUNCTIONS TOP/BOT OF PROGRAM (BOTH POST DECLARATION ABOVE)
+******************************************************************************/
+void DA_INIT(DYN_AR *u_da, char u_da_type) { /* init: DA_INIT(userDynArrName, 'i'/'c') */
 	if(u_da_type != 'i' && u_da_type != 'I' && u_da_type != 'c' && u_da_type != 'C') {
 		printf("\n\nINCOMPATIBLE DYNAMIC ARRAY TYPE\n=> ENTER 'i' ");
 		printf("FOR INT ARRAY\n=> ENTER 'c' FOR CHAR/STR ARRAY\n\n");
@@ -28,9 +39,15 @@ void DA_INIT(DYN_ARR *u_da, char u_da_type) {
 	}
 	(u_da_type == 'i' || u_da_type == 'I') ? (u_da -> da_type = 1) : (u_da -> da_type = 0);
 	u_da -> da_head = u_da -> da_tail = NULL;
-	return; /* init post declare: DA_INIT(userDynArrName, 'i'/'c') */
+	return; 
 }
-void DA_DNIT(DYN_ARR *u_da) {
+/* multi(2D)arr init: DMA_INIT(userDynMultiArrName, USER_SIZE, 'i'/'c') */
+void DMA_INIT(DYN_MAR *u_da, int size, char u_da_type) {
+	u_da -> dyn_mar_size = size;
+	for(int i = 0; i < size; i++) 
+		DA_INIT(u_da[i].d4, u_da_type);
+}
+void DA_DNIT(DYN_AR *u_da) { /* deinit ending freeing mallocs: DA_DNIT(userDynArrName) */
 	if(u_da -> da_head != NULL) {
 		DYNA *q = u_da -> da_tail;
 		while(q -> priv != NULL) {
@@ -44,12 +61,14 @@ void DA_DNIT(DYN_ARR *u_da) {
 	u_da -> da_tail = NULL;
 	free(u_da -> da_head);
 	free(u_da -> da_tail);
-	return; /* free mallocs at end: DA_DNIT(userDynArrName) */
-} /* wrap number elements being passed in n0(#) macro */
+	return; 
+}
+/* deinit multi(2D)arr ending freeing mallocs: DMA_DNIT(userDynMultiArrName) */
+void DMA_DNIT(DYN_MAR *u_da) { for(int i = 0; i < (u_da -> dyn_mar_size); i++) DA_DNIT(u_da[i].d4); }
 /******************************************************************************
 * 'L'ENGTH ==> return length of current LL
 ******************************************************************************/
-int _l(DYN_ARR *u_da) {
+int _l(DYN_AR *u_da) {
 	int count = 0;
 	DYNA *p = u_da -> da_head;
 	if(p != NULL) {
@@ -63,7 +82,7 @@ int _l(DYN_ARR *u_da) {
 /******************************************************************************
 * 'I'NDEX ==> return: first index with element true, -1 DNE
 ******************************************************************************/
-int _i(DYN_ARR *u_da, void *value) {
+int _i(DYN_AR *u_da, void *value) {
 	int count = 0;
 	DYNA *p = u_da -> da_head;
 	if(p != NULL) {
@@ -82,25 +101,25 @@ int _i(DYN_ARR *u_da, void *value) {
 /******************************************************************************
 * 'E'LEM ==> return: index's elem true, 32202/"32202" DNE ==> -index backwards
 ******************************************************************************/
-void* _ed(DYN_ARR *u_da, int index, int elim_val_type) { 
+void* _ed(DYN_AR *u_da, int index, int elim_val_type) { 
 	int count = 0, i, err_num = 32202;
 	void *err_val = &err_num, *gud_val;
 	DYNA *p;
 	if(u_da -> da_head == NULL) {
-		if(elim_val_type == 2) return (void*)"32202";
-		return err_val;
+		if(elim_val_type == 1) return err_val;
+		return (void*)"32202";
 	}
 	if(index > 0) { /* traverse forwards */
 		p = u_da -> da_head;
 		for(i = 0; i < index; i++, p = p -> nixt)
 			if(p == NULL || p == u_da -> da_tail) {
-				if(elim_val_type == 2) return (void*)"32202";
-				return err_val;
+				if(elim_val_type == 1) return err_val;
+				return (void*)"32202";
 			}
 		if(p == NULL || p == u_da -> da_tail) {
 			if(elim_val_type == 1 && p -> elim.ida_val == 80808) {
 				return err_val;
-			} else if(elim_val_type == 2 && p -> elim.cda_val == '\0') {
+			} else if(elim_val_type == 0 && p -> elim.cda_val == '\0') {
 				return (void*)"32202";
 			}
 		}
@@ -110,13 +129,13 @@ void* _ed(DYN_ARR *u_da, int index, int elim_val_type) {
 		p = u_da -> da_tail -> priv; /* tail empty : dyn node creation buffer */
 		for(i = 1; i < -index; i++, p = p -> priv)
 			if(p == NULL) {
-				if(elim_val_type == 2) return (void*)"32202";
-				return err_val;
+				if(elim_val_type == 1) return err_val;
+				return (void*)"32202";
 			}
 		if(p == NULL) {
 			if(elim_val_type == 1 && p -> elim.ida_val == 80808) {
 				return err_val;
-			} else if(elim_val_type == 2 && p -> elim.cda_val == '\0') {
+			} else if(elim_val_type == 0 && p -> elim.cda_val == '\0') {
 				return (void*)"32202";
 			}
 		}
@@ -129,12 +148,12 @@ void* _ed(DYN_ARR *u_da, int index, int elim_val_type) {
 		return (void*)(u_da -> da_head -> elim.cda_val);
 	}
 }
-int _ei(DYN_ARR *u_da, int index) { return *(int*)_ed(u_da, index, u_da -> da_type); }
-char* _ec(DYN_ARR *u_da, int index) { return _ed(u_da, index, u_da -> da_type); }
+int _ei(DYN_AR *u_da, int index) { return *(int*)_ed(u_da, index, u_da -> da_type); }
+char* _ec(DYN_AR *u_da, int index) { return _ed(u_da, index, u_da -> da_type); }
 /******************************************************************************
 * 'P'UT ==> put new value as index's element, return: 1 true, 0 DNE
 ******************************************************************************/
-int _p(DYN_ARR *u_da, int index, void *value) {
+int _p(DYN_AR *u_da, int index, void *value) {
 	int count = 0, i;
 	DYNA *p = u_da -> da_head;
 	for(i = 0; i < index; i++, p = p -> nixt)
@@ -150,7 +169,7 @@ int _p(DYN_ARR *u_da, int index, void *value) {
 /******************************************************************************
 * 'S'WAP ==> swap idx1 & idx2 elements, return: 1 true, 0 DNE
 ******************************************************************************/
-int _s(DYN_ARR *u_da, int idx1, int idx2) {
+int _s(DYN_AR *u_da, int idx1, int idx2) {
 	int value1, value2;
 	char *val1, *val2;
 	if (u_da -> da_type == 1) {
@@ -171,7 +190,7 @@ int _s(DYN_ARR *u_da, int idx1, int idx2) {
 /******************************************************************************
 * TRIM EMPTY CELLS AT THE END OF ARRAYS POST DELETION, ONLY KEEPING LAST BUFFER
 ******************************************************************************/
-void da_trim_cells_(DYN_ARR *u_da) {
+void da_trim_cells_(DYN_AR *u_da) {
 	while(u_da -> da_tail -> priv != NULL) {
 		if(u_da -> da_type == 1) {
 			if(u_da -> da_tail -> priv -> elim.ida_val != 80808) return;
@@ -189,7 +208,7 @@ void da_trim_cells_(DYN_ARR *u_da) {
 /******************************************************************************
 * 'D'ELETE ==> return: 1 true, 0 DNE ==> -index backwards
 ******************************************************************************/
-int _d(DYN_ARR *u_da, int index) {
+int _d(DYN_AR *u_da, int index) {
 	int count = 0, i;
 	DYNA *p;
 	if(u_da -> da_head == NULL) return 0;
@@ -224,7 +243,7 @@ int _d(DYN_ARR *u_da, int index) {
 /******************************************************************************
 * 'A'DD ==> add value at index
 ******************************************************************************/
-void _a(DYN_ARR *u_da, int index, void *value) {
+void _a(DYN_AR *u_da, int index, void *value) {
 	/* EMPTY CELL VALUES */
 	DYNA emptyi = { .nixt = NULL, .priv = NULL, .elim.ida_val = 80808 };
 	DYNA emptyc = { .nixt = NULL, .priv = NULL, .elim.cda_val = "XQXQX" };
@@ -291,3 +310,15 @@ void _a(DYN_ARR *u_da, int index, void *value) {
 	q -> priv = p;
 	return;
 }
+/******************************************************************************
+* MULTI ARRAY OF DYNAMIC ARRAYS FUNCTION COUNTERPARTS ==> function_name+'m'
+(!) PASS &MULTI_ARRAY_NAME[ACCESS_IDX] <<'&' FOR ADDRESS>> W/ _am() FUNCM (!)
+******************************************************************************/
+int _lm(DYN_MAR u_da) { return _l(u_da.d4); }
+int _im(DYN_MAR u_da, void *value) { return _i(u_da.d4, value); }
+int _eim(DYN_MAR u_da, int index) { return *(int*)_ed(u_da.d4, index, u_da.d4 -> da_type); }
+char* _ecm(DYN_MAR u_da, int index) { return _ed(u_da.d4, index, u_da.d4 -> da_type); }
+int _pm(DYN_MAR u_da, int index, void *value) { return _p(u_da.d4, index, value); }
+int _sm(DYN_MAR u_da, int idx1, int idx2) { return _s(u_da.d4, idx1, idx2); }
+int _dm(DYN_MAR u_da, int index) { return _d(u_da.d4, index); }
+void _am(DYN_MAR *u_da, int index, void *value) { _a(u_da -> d4, index, value); }
