@@ -6,7 +6,7 @@ Doubly linked list to simulate a dynamically growing array
 #include "dynarr.h"
 
 **Declare locally:**
-DYN_ARR user_array_name[1];
+DYN_AR user_array_name[1];
 
 **Then initialize "user_array_name" as per 'I'nt or 'C'har array:**
  1) DA_INIT(user_array_name, 'i');
@@ -16,12 +16,12 @@ DYN_ARR user_array_name[1];
 **Deinitialize mallocs before ending program:**
  1) DA_DNIT(user_array_name);
 
- * **===============================================================**
- * **FUNCTION PROTOTYPES: _actionDatatype(user_array_name, index, [n0(int) || char \*])**
- * **===============================================================**
- * **ACTIONS: 'a'dd - 'd'elete - 'p'ut - 'l'ength - 'e'lem - 'i'ndex - 's'wap**
- * **DATA TYPES: 'i'nt - 'c'har => wrap int elements with n0(#) when passing to functions**
- * **===============================================================**
+**===============================================================**<br/>
+**FUNCTION PROTOTYPES: _actionDatatype(user_array_name, index, [n0(int) || char \*])**<br/>
+**===============================================================**<br/>
+**ACTIONS: 'a'dd - 'd'elete - 'p'ut - 'l'ength - 'e'lem - 'i'ndex - 's'wap**<br/>
+**DATA TYPES: 'i'nt - 'c'har => wrap int elements with n0(#) when passing to functions**<br/>
+**===============================================================**<br/>
 
 **ADD (*create new cell*):**
 * void _a(user_array_name, index_No, [n0(int) || char *]);
@@ -56,3 +56,25 @@ DYN_ARR user_array_name[1];
 **SWAP (*swap two cell positions*):**
 * int _s(user_array_name, index_No1, index_No2);
     * _s(user_array_name, 0, 1);
+
+**===============================================================**<br/>
+_**MULTIDIMENSIONAL DYNAMIC ARRAYS:**_
+**===============================================================**<br/>
+**Local Declaration:**<br/>
+DYN_MAR user_marray_name[USER_MAR_SIZE];<br/>
+_=> M(ultiple)AR(rays)_
+
+**Initialization post-declaration:**
+ 1) DMA_INIT(user_marray_name, USER_MAR_SIZE, 'i');
+ 2) DMA_INIT(user_marray_name, USER_MAR_SIZE, 'c');
+ 
+ 
+**Deinitialization before ending program:**
+ 1) DMA_DNIT(user_marray_name);
+ 
+ **FUNCTIONALITY => Identical to 1D, save for 3 key changes:**
+1) All func names end with 'm' ['m'ulti-Dim]
+2) All take ACCESS_INDEX of specific dynamic array to alter in 2D marray
+    * _l(user_array_name); => _lm(user_marray_name[ACCESS_INDEX]);
+3) 'add' function [\_am()] takes ADDRESS of user_marray_name with '&':
+    * _am(&user_marray_name[ACCESS_INDEX],0,n0(1));
