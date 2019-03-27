@@ -1,5 +1,5 @@
 # doubly_Linked_List_dynamic_array
-Doubly linked list to simulate a dynamically growing array
+_Doubly linked list to simulate a dynamically growing array!_
 -----------------------------------------------------------
 
 **Include Library:**
@@ -17,15 +17,15 @@ DYN_AR user_array_name[1];
  1) DA_DNIT(user_array_name);
 
 **===============================================================**<br/>
-**FUNCTION PROTOTYPES: _actionDatatype(user_array_name, index, [n0(int) || char \*])**<br/>
+**FUNCTION PROTOTYPES: _actionDatatype(user_array_name, index, [int || char \*])**<br/>
 **===============================================================**<br/>
 **ACTIONS: 'a'dd - 'd'elete - 'p'ut - 'l'ength - 'e'lem - 'i'ndex - 's'wap**<br/>
-**DATA TYPES: 'i'nt - 'c'har => wrap int elements with n0(#) when passing to functions**<br/>
+**DATA TYPES: 'i'nt - 'c'har**<br/>
 **===============================================================**<br/>
 
 **ADD (*create new cell*):**
-* void _a(user_array_name, index_No, [n0(int) || char *]);
-    * _a(user_array_name, 0, n0(1));
+* void _a(user_array_name, index_No, [int || char *]);
+    * _a(user_array_name, 0, 1);
     * _a(user_array_name, 0, "one");
 
 **DELETE (*remove cell*):**
@@ -33,8 +33,8 @@ DYN_AR user_array_name[1];
     * _d(user_array_name, 1);
 
 **PUT (*edit existing cell*):**
-* int _p(user_array_name, index_No, [n0(int) || char *]);
-    * _p(user_array_name, 0, n0(1));
+* int _p(user_array_name, index_No, [int || char *]);
+    * _p(user_array_name, 0, 1);
     * _p(user_array_name, 0, "one");
 
 **LENGTH (*get array length*):**
@@ -49,8 +49,8 @@ DYN_AR user_array_name[1];
 * **_=> returns 32202/"32202" 'ERROR' if element DNE_** 
 
 **INDEX (*get first index of an element*):**
-* int _i(user_array_name, [n0(int) || char *]);
-    * _i(user_array_name, n0(1));
+* int _i(user_array_name, [int || char *]);
+    * _i(user_array_name, 1);
     * _i(user_array_name, "one");
 
 **SWAP (*swap two cell positions*):**
@@ -72,9 +72,7 @@ _=> M(ultiple)AR(rays)_
 **Deinitialization before ending program:**
  1) DMA_DNIT(user_marray_name);
  
- **FUNCTIONALITY => Identical to 1D, save for 3 key changes:**
+ **FUNCTIONALITY => Identical to 1D, save for 2 key changes:**
 1) All func names end with 'm' ['m'ulti-Dim]
 2) All take ACCESS_INDEX of specific dynamic array to alter in 2D marray
-    * _l(user_array_name); => _lm(user_marray_name[ACCESS_INDEX]);
-3) 'add' function [\_am()] takes ADDRESS of user_marray_name with '&':
-    * _am(&user_marray_name[ACCESS_INDEX],0,n0(1));
+    * _l(user_marray_name); => _lm(user_marray_name[ACCESS_INDEX]);
