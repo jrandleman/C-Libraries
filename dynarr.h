@@ -2,8 +2,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-/* WRAP INT ELEMENTS BEING PASSED TO FUNCTIONS WITH n0(#) MACRO FOR ADDRESS */
-#define n0(mac_num_val) ({int mac_num_address = mac_num_val;&mac_num_address;})
+/* n0() => RVAL NUMBER ADDRESS -:- v4() => RVAL VAR ADDRESS [n0() W/ STR'S] */
+#define n0(MAC_NUM_VAL) ({int MAC_NUM_ADDRESS = MAC_NUM_VAL;&MAC_NUM_ADDRESS;})
+#define v4(v4_ELEM,v4_TYPE) ({int v44MP = ((v4_TYPE == 1)*(int)v4_ELEM);(void*)&v44MP;})
+#define _i(i_DYNA,i_ELIM) ((i_DYNA->da_type == 0)?(_insert_da(i_DYNA,(void*)i_ELIM)):(_insert_da(i_DYNA,v4(i_ELIM,i_DYNA->da_type))))
+#define _p(p_DYNA,p_IDX,p_ELIM) ((p_DYNA->da_type == 0)?(_put_da(p_DYNA,p_IDX,(void*)p_ELIM)):(_put_da(p_DYNA,p_IDX,v4(p_ELIM,p_DYNA->da_type))))
+#define _a(a_DYNA,a_IDX,a_ELIM) ((a_DYNA->da_type == 0)?(_add_da(a_DYNA,a_IDX,(void*)a_ELIM)):(_add_da(a_DYNA,a_IDX,v4(a_ELIM,a_DYNA->da_type))))
+#define _im(i_DYMA,im_ELIM) (_i(i_DYMA.d4,im_ELIM))
+#define _pm(p_DYMA,pm_IDX,pm_ELIM) (_p(p_DYMA.d4,pm_IDX,pm_ELIM))
+#define _am(a_DYMA,am_IDX,am_ELIM) (_a(a_DYMA.d4,am_IDX,am_ELIM))
 /******************************************************************************
 * DYNA LL NODE 'CELL' STRUCTURE W/ UNION FOR CORRESPONDING INT/CHAR DATA TYPE
 ******************************************************************************/
@@ -82,7 +89,7 @@ int _l(DYN_AR *u_da) {
 /******************************************************************************
 * 'I'NDEX ==> return: first index with element true, -1 DNE
 ******************************************************************************/
-int _i(DYN_AR *u_da, void *value) {
+int _insert_da(DYN_AR *u_da, void *value) {
 	int count = 0;
 	DYNA *p = u_da -> da_head;
 	if(p != NULL) {
@@ -153,7 +160,7 @@ char* _ec(DYN_AR *u_da, int index) { return _ed(u_da, index, u_da -> da_type); }
 /******************************************************************************
 * 'P'UT ==> put new value as index's element, return: 1 true, 0 DNE
 ******************************************************************************/
-int _p(DYN_AR *u_da, int index, void *value) {
+int _put_da(DYN_AR *u_da, int index, void *value) {
 	int count = 0, i;
 	DYNA *p = u_da -> da_head;
 	for(i = 0; i < index; i++, p = p -> nixt)
@@ -177,13 +184,13 @@ int _s(DYN_AR *u_da, int idx1, int idx2) {
 		if(value1 == 32202) return 0;
 		value2 = _ei(u_da, idx2);
 		if(value2 == 32202) return 0;
-		if(_p(u_da, idx1, &value2) == 0 || _p(u_da, idx2, &value1) == 0) return 0;
+		if(_put_da(u_da, idx1, &value2) == 0 || _put_da(u_da, idx2, &value1) == 0) return 0;
 	} else {
 		val1 = _ec(u_da, idx1);
 		if(strcmp(val1, "32202") == 0) return 0;
 		val2 = _ec(u_da, idx2);
 		if(strcmp(val2, "32202") == 0) return 0;
-		if(_p(u_da, idx1, val2) == 0 || _p(u_da, idx2, val1) == 0) return 0;
+		if(_put_da(u_da, idx1, val2) == 0 || _put_da(u_da, idx2, val1) == 0) return 0;
 	}
 	return 1;
 }
@@ -243,7 +250,7 @@ int _d(DYN_AR *u_da, int index) {
 /******************************************************************************
 * 'A'DD ==> add value at index
 ******************************************************************************/
-void _a(DYN_AR *u_da, int index, void *value) {
+void _add_da(DYN_AR *u_da, int index, void *value) {
 	/* EMPTY CELL VALUES */
 	DYNA emptyi = { .nixt = NULL, .priv = NULL, .elim.ida_val = 80808 };
 	DYNA emptyc = { .nixt = NULL, .priv = NULL, .elim.cda_val = "XQXQX" };
@@ -312,13 +319,9 @@ void _a(DYN_AR *u_da, int index, void *value) {
 }
 /******************************************************************************
 * MULTI ARRAY OF DYNAMIC ARRAYS FUNCTION COUNTERPARTS ==> function_name+'m'
-(!) PASS &MULTI_ARRAY_NAME[ACCESS_IDX] <<'&' FOR ADDRESS>> W/ _am() FUNCM (!)
 ******************************************************************************/
 int _lm(DYN_MAR u_da) { return _l(u_da.d4); }
-int _im(DYN_MAR u_da, void *value) { return _i(u_da.d4, value); }
 int _eim(DYN_MAR u_da, int index) { return *(int*)_ed(u_da.d4, index, u_da.d4 -> da_type); }
 char* _ecm(DYN_MAR u_da, int index) { return _ed(u_da.d4, index, u_da.d4 -> da_type); }
-int _pm(DYN_MAR u_da, int index, void *value) { return _p(u_da.d4, index, value); }
 int _sm(DYN_MAR u_da, int idx1, int idx2) { return _s(u_da.d4, idx1, idx2); }
 int _dm(DYN_MAR u_da, int index) { return _d(u_da.d4, index); }
-void _am(DYN_MAR *u_da, int index, void *value) { _a(u_da -> d4, index, value); }
