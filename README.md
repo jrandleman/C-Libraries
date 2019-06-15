@@ -19,43 +19,43 @@ DYN_AR user_array_name[1];
 **===============================================================**<br/>
 **FUNCTION PROTOTYPES: _actionDatatype(user_array_name, index, [int || char \*])**<br/>
 **===============================================================**<br/>
-**ACTIONS: 'a'dd - 'd'elete - 'p'ut - 'l'ength - 'e'lem - 'i'ndex - 's'wap**<br/>
+**ACTIONS: add - del - put - len - elt - idx - swap**<br/>
 **DATA TYPES: 'i'nt - 'c'har**<br/>
 **===============================================================**<br/>
 
 **ADD (*create new cell*):**
-* void _a(user_array_name, index_No, [int || char *]);
-    * _a(user_array_name, 0, 1);
-    * _a(user_array_name, 0, "one");
+* void _add(user_array_name, index_No, [int || char *]);
+    * _add(user_array_name, 0, 1);
+    * _add(user_array_name, 0, "one");
 
 **DELETE (*remove cell*):**
-* int _d(user_array_name, index_No);
-    * _d(user_array_name, 1);
+* int _del(user_array_name, index_No);
+    * _del(user_array_name, 1);
 
 **PUT (*edit existing cell*):**
-* int _p(user_array_name, index_No, [int || char *]);
-    * _p(user_array_name, 0, 1);
-    * _p(user_array_name, 0, "one");
+* int _put(user_array_name, index_No, [int || char *]);
+    * _put(user_array_name, 0, 1);
+    * _put(user_array_name, 0, "one");
 
 **LENGTH (*get array length*):**
-* int _l(user_array_name);
-    * _l(user_array_name);
+* int _len(user_array_name);
+    * _len(user_array_name);
 
 **ELEM (*get element at an index*):**
-* int _ei(user_array_name, index_No);
-* char* _ec(user_array_name, index_No);
-    * _ei(user_array_name, 0);
-    * _ec(user_array_name, 0);
+* int _elti(user_array_name, index_No);
+* char* _eltc(user_array_name, index_No);
+    * _elti(user_array_name, 0);
+    * _eltc(user_array_name, 0);
 * **_=> returns 32202/"32202" 'ERROR' if element DNE_** 
 
 **INDEX (*get first index of an element*):**
-* int _i(user_array_name, [int || char *]);
-    * _i(user_array_name, 1);
-    * _i(user_array_name, "one");
+* int _idx(user_array_name, [int || char *]);
+    * _idx(user_array_name, 1);
+    * _idx(user_array_name, "one");
 
 **SWAP (*swap two cell positions*):**
-* int _s(user_array_name, index_No1, index_No2);
-    * _s(user_array_name, 0, 1);
+* int _swap(user_array_name, index_No1, index_No2);
+    * _swap(user_array_name, 0, 1);
 
 **===============================================================**<br/>
 _**MULTIDIMENSIONAL DYNAMIC ARRAYS:**_
@@ -75,4 +75,4 @@ _=> M(ultiple)AR(rays)_
  **FUNCTIONALITY => Identical to 1D, save for 2 key changes:**
 1) All func names end with 'm' ['m'ulti-Dim]
 2) All take ACCESS_INDEX of specific dynamic array to alter in 2D marray
-    * _l(user_marray_name); => _lm(user_marray_name[ACCESS_INDEX]);
+    * _len(user_marray_name); => _lenm(user_marray_name[ACCESS_INDEX]);
