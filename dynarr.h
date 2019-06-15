@@ -75,7 +75,7 @@ void DMA_DNIT(DYN_MAR *u_da) { for(int i = 0; i < (u_da -> dyn_mar_size); i++) D
 /******************************************************************************
 * 'L'ENGTH ==> return length of current LL
 ******************************************************************************/
-int _list(DYN_AR *u_da) {
+int _len(DYN_AR *u_da) {
 	int count = 0;
 	DYNA *p = u_da -> da_head;
 	if(p != NULL) {
@@ -320,7 +320,7 @@ void _add_da(DYN_AR *u_da, int index, void *value) {
 /******************************************************************************
 * MULTI ARRAY OF DYNAMIC ARRAYS FUNCTION COUNTERPARTS ==> function_name+'m'
 ******************************************************************************/
-int _listm(DYN_MAR u_da) { return _list(u_da.d4); }
+int _lenm(DYN_MAR u_da) { return _len(u_da.d4); }
 int _eltim(DYN_MAR u_da, int index) { return *(int*)_ed(u_da.d4, index, u_da.d4 -> da_type); }
 char* _eltcm(DYN_MAR u_da, int index) { return _ed(u_da.d4, index, u_da.d4 -> da_type); }
 int _swapm(DYN_MAR u_da, int idx1, int idx2) { return _swap(u_da.d4, idx1, idx2); }
