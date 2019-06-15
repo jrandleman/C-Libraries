@@ -27,7 +27,7 @@ int main() {
 	_addm(int_multi_arr[2],0,3); /* add values to 3rd dyn arr in array */
 	printf("\nint_multi_arr[0] index 0: %d, index 2: %d, index 3: %d\n",_eltim(int_multi_arr[0],0),_eltim(int_multi_arr[0],2),_eltim(int_multi_arr[0],3));
 	printf("int_multi_arr[1] index 0: %d, int_multi_arr[2] index 0: %d\n",_eltim(int_multi_arr[1],0),_eltim(int_multi_arr[2],0));
-	printf("int_multi_arr[0] length: %d\n",_listm(int_multi_arr[0]));
+	printf("int_multi_arr[0] length: %d\n",_lenm(int_multi_arr[0]));
 	printf("int_multi_arr[0] index of element 6: %d\n",_idxm(int_multi_arr[0], 6));
 	_putm(int_multi_arr[0],2,7); /* put 7 in existing int_multi_arr[0] idx 2 */
 	printf("int_multi_arr[0] swap, index 2 - index 3: %d - %d\n",_eltim(int_multi_arr[0],2),_eltim(int_multi_arr[0],3));
@@ -46,7 +46,7 @@ int main() {
 	_addm(char_multi_arr[1],1,"job"); /* add values to 3rd dyn arr in array */
 	printf("\nchar_multi_arr[0] index 0: %s, index 2: %s, index 3: %s\n",_eltcm(char_multi_arr[0],0),_eltcm(char_multi_arr[0],2),_eltcm(char_multi_arr[0],3));
 	printf("char_multi_arr[1] index 0: %s, index 1: %s\n",_eltcm(char_multi_arr[1],0),_eltcm(char_multi_arr[1],1));
-	printf("char_multi_arr[0] length: %d\n",_listm(char_multi_arr[0]));
+	printf("char_multi_arr[0] length: %d\n",_lenm(char_multi_arr[0]));
 	printf("char_multi_arr[0] index of element 'good': %d\n",_idxm(char_multi_arr[0], "good"));
 	_putm(char_multi_arr[0],2,"how"); /* put 'how' in existing char_multi_arr[0] idx 2 */
 	printf("char_multi_arr[0] swap, index 2 - index 3: %s - %s\n",_eltcm(char_multi_arr[0],2),_eltcm(char_multi_arr[0],3));
@@ -83,7 +83,7 @@ int main() {
 	_put(int_arr1,3,4); /* 'p'ut value 4 in index 3 */
 	printf("int_arr1 index 3: %d\n", _elti(int_arr1,3)); /* get index 3 'e'lement */
 	_del(int_arr1,3); /* 'd'elete index 3 */
-	printf("int_arr1 length: %d\n", _list(int_arr1)); /* array 'l'ength */
+	printf("int_arr1 length: %d\n", _len(int_arr1)); /* array 'l'ength */
 
 	_put(int_arr1,0,6); ///* 'a'dd 6 to index 0 */
 	printf("int_arr1 index 0: %d\n", _elti(int_arr1,0)); /* get 'e'lement at index 0 */
@@ -101,7 +101,7 @@ int main() {
 	_add(char_arr1,0,"hello"); /* 'a'dd 'dude' to index 0 in char_arr1 */
 	_add(char_arr1,2,"my"); /* 'a'dd 'my' to index 2 */
 	printf("Index 0: %s - index 2: %s\n", _eltc(char_arr1,0), _eltc(char_arr1,2));
-	printf("char_arr1 length: %d\n", _list(char_arr1));
+	printf("char_arr1 length: %d\n", _len(char_arr1));
 	_del(char_arr1,2); /* 'd'elete index 2 */
 	_add(char_arr1,2,"guy"); /* 'a'dd 'guy' to index 2 */
 	printf("Index 2: %s\n",_eltc(char_arr1,2)); /* get 'e'lement at index 2 */
