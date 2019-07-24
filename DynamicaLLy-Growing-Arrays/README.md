@@ -1,5 +1,5 @@
-# DoubLL-Dynamic-Arrays!
-_C Library simulating dynamically growing arrays via doubly linked lists!_
+# DynamicaLLy-Growing-Arrays!
+_C Library simulating dynamically growing arrays via doubly Linked Lists!_
 -----------------------------------------------------------
 
 **Include Library:**
