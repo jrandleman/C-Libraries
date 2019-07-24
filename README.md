@@ -1,5 +1,5 @@
 # doubly_Linked_List_dynamic_array
-_Doubly linked list to simulate a dynamically growing array!_
+_C Library simulating dynamically growing arrays via doubly linked lists!_
 -----------------------------------------------------------
 
 **Include Library:**
