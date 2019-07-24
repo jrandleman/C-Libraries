@@ -34,6 +34,7 @@ void splitHelp() {
 *  Using split.h:                                                                    *\n\
 *  | L_ char** splitMatrix = split(\"your string\", \"split instance\");                 *\n\
 *  | | L_ Matrix rows are \"your string\"'s segments split at every \"split instance\".  *\n\
+*  | | L_ Matrix ends when 1st char in row == '\\0' (ie splitMatrix[i][0] == '\\0').   *\n\
 *  | | L_ Both literals & variables work for \"your string\" & \"split instance\".       *\n\
 *  | L_ splitHelp():  Printf this message.                                           *\n\
 *  |                                                                                 *\n\
