@@ -1,4 +1,4 @@
-# doubly_Linked_List_dynamic_array
+# DoubLL-Dynamic-Arrays!
 _C Library simulating dynamically growing arrays via doubly linked lists!_
 -----------------------------------------------------------
 
