@@ -1,5 +1,5 @@
 # Assorted-Sorting-Sorts
-_Selection, Insertion, Bubble, Heap, Shell, Quick, Merge, &amp; Hash Sorting!_</br>
+_Select, Insert, Bubble, Heap, Shell, Quick, Merge, &amp; Hash Sorting Library!_</br>
 -------------------------------------------------------------------------
 ***SORT FUNCTION NAMES:***</br>
 	***(1)*** SELECT ***(2)*** INSERT ***(3)*** BUBBLE ***(4)*** HEAP ***(5)*** SHELL ***(6)*** QUICK ***(7)*** MERGE ***(8)*** HASH
