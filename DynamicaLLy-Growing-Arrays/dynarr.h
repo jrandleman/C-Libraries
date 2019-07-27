@@ -1,4 +1,8 @@
 /* AUTHOR: JORDAN RANDLEMAN -:- USE DOUBLY LL TO SIMULATE DYNAMIC ARRAY CREATION */
+
+#ifndef DYNARR_H_
+#define DYNARR_H_
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -325,3 +329,5 @@ int _eltim(DYN_MAR u_da, int index) { return *(int*)_ed(u_da.d4, index, u_da.d4 
 char* _eltcm(DYN_MAR u_da, int index) { return _ed(u_da.d4, index, u_da.d4 -> da_type); }
 int _swapm(DYN_MAR u_da, int idx1, int idx2) { return _swap(u_da.d4, idx1, idx2); }
 int _delm(DYN_MAR u_da, int index) { return _del(u_da.d4, index); }
+
+#endif
