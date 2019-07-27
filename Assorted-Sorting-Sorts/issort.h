@@ -1,4 +1,8 @@
 /* AUTHOR: JORDAN RANDLEMAN -:- SORT-FUNCTIONS/BSEARCH FOR INTEGERS AND WORDS IN A STRING */
+
+#ifndef ISSORT_H_
+#define ISSORT_H_
+
 #include <assert.h>
 #include <string.h>
 #include <stdio.h>
@@ -279,7 +283,7 @@ void hash_sort(int a[], int n, int (*cmp)()) {/* O(R) == O(max-min) */
 		for(k = 0; k < hashmap[i]; k++, j++) a[j] = i + min;
 }
 /******************************************************************************
-* BINARY SEARCHES -:- BEST: O(logn) & WORST: O(logn)
+* BINARY SEARCHES -:- BEST & WORST: O(logn)
 ******************************************************************************/
 int bin_search(int sought, int a[], int arr_size, bool *found, int (*cmp)()) {
 	int l = 0, h = arr_size - 1, c;
@@ -302,3 +306,5 @@ int bin_ssearch(char *sought, char a[], bool *found, int (*cmp)()) {
 	*found = false; 
 	return l; /* word (not letter) index */
 }
+
+#endif
