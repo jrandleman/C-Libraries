@@ -1,5 +1,8 @@
 // Author: Jordan Randleman - S-p-l-i-t-S-t-r-i-n-g Library
 
+#ifndef SPLIT_H_
+#define SPLIT_H_
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -113,3 +116,5 @@ char** split(char *str, char *splitHere) {
   SSGC.cpys[SSGC.length++].matrix = buffer;
   return buffer;
 }
+
+#endif
