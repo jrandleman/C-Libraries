@@ -1,5 +1,8 @@
 // Author: Jordan Randleman - (C)(S)tring(O)bject(N)otation
 
+#ifndef CSON_H_
+#define CSON_H_
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -168,3 +171,5 @@ char **csonValueAddress(char *soughtKey) {
     return &(CSON) -> vals[CSON -> length - 1];
   }
 }
+
+#endif
