@@ -29,6 +29,6 @@ int *digits = malloc(sizeof(int)*10);    // alloc a "dumb" ptr
 digits = smrtrealloc(sizeof(int)*20);    // realloc & convert "dumb" ptr to "smart" ptr
 
 
-// (5) smrtfree()   -- treat like free -- frees ptr immediately & not atexit
+// (5) smrtfree() -- treat like free -- frees ptr immediately & not atexit
 smrtfree(nums);
 ```
