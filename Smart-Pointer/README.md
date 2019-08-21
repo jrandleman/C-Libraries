@@ -1,24 +1,30 @@
 # Smart-Pointer!
-## _Provides 4 Fcns for Handling Ptrs With Automated Garbage Collection!_
+## _Provides 5 Fcns for Handling Ptrs With Automated Garbage Collection!_
 
 ### Include the Library:
 ```c
 #include "smrtptr.h"
 ```
 
-### Provides 4 Pointer Functions:
+### Provides 5 Pointer Functions:
 * _**Note**: smart pointers either freed by_ '`smrtptr.h`' _via_ '`atexit()`' _, or prematurely by the user via_ '`smrtfree()`'
 ```c
-// (1) smrtptr()    -- pass an allocated pointer argument    -- freed atexit
-char *str = malloc(sizeof(char)*10); 
+// (1) smrtptr() -- convert an allocated "dumb" ptr arg to a "smart" ptr -- freed atexit
+char *str = malloc(sizeof(char)*10);
 smrtptr(str);
 
-// (2) smrtmalloc() -- treat like malloc (passing size)      -- freed atexit
+// (2) smrtmalloc() -- treat like malloc (passing size) -- freed atexit
 int *nums = smrtmalloc(sizeof(int)*10);
 
 // (3) smrtcalloc() -- treat like calloc (passing num, size) -- freed atexit
 short *lil = smrtcalloc(10, sizeof(short));
 
-// (4) smrtfree()   -- treat like free -- frees ptr immediately & not atexit
+// (4) smrtrealloc() -- treat like realloc (passing ptr, size) -- freed atexit
+//     compatible with both "dumb" & "smart" ptrs!
+str = smrtrealloc(str, sizeof(char)*20); // realloc a "smart" ptr
+int *digits = malloc(sizeof(int)*10);    // alloc a "dumb" ptr
+digits = smrtrealloc(sizeof(int)*20);    // realloc & convert "dumb" ptr to "smart" ptr!
+
+// (5) smrtfree()   -- treat like free -- frees ptr immediately & not atexit
 smrtfree(nums);
 ```
