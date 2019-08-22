@@ -87,7 +87,7 @@ void *smrtrealloc(void *ptr, size_t realloc_size) {
   void *smtr_realloced_ptr;
   // realloc a "smart" ptr already in garbage collector
   for(; i < SMRTPTR_GC.len; ++i) 
-    if(SMRTPTR_GC.ptrs[i] == ptr) { // realloc ptr in garbage collector directly
+    if(SMRTPTR_GC.ptrs[i] == ptr) {
       smtr_realloced_ptr = realloc(ptr, realloc_size); // frees ptr in garbage collector
       if(smtr_realloced_ptr == NULL) throw_bad_alloc("REALLOC", "SMRTREALLOC FUNCTION");
       SMRTPTR_GC.ptrs[i] = smtr_realloced_ptr; // point freed ptr at realloced address
