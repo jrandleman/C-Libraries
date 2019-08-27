@@ -4,16 +4,26 @@
 #define SMRTPTR_H_
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
-/*
- * "smrtptr.h" provides 5 functions to handle pointers:
+/**
+ * "smrtptr.h" provides 5 functions & a macro to handle pointers:
+ *
  * (1) smrtptr()     -- pass an allocated pointer argument     -- freed atexit
+ *
  * (2) smrtmalloc()  -- treat like malloc (passing size)       -- freed atexit
+ *
  * (3) smrtcalloc()  -- treat like calloc (passing num, size)  -- freed atexit
+ *
  * (4) smrtrealloc() -- treat like realloc (passing ptr, size) -- freed atexit
- *                      compatible w/ both "smart" & "dumb" pointers!
+ *                      => compatible w/ both "smart" & "dumb" pointers!
+ *
  * (5) smrtfree()    -- treat like free -- frees ptr immediately, & not atexit
+ *                      => put "#define NOISYSMRTPTR" B4 "#includ smrtptr.h" 
+ *                         to show how many smart pointers were freed
+ *
+ * (6) smrtassert()  -- performs like assert.h, but frees smrtptrs prior exit
+ *                   -- also like assert.h, put "#define NDEBUG" above 
+ *                      "#include smrtptr.h" to deactivate all "smrtassert"'s
  */
 
 // garbage collector & smart pointer storage struct
@@ -22,12 +32,16 @@ static struct SMRTPTR_GARBAGE_COLLECTOR {
   void **ptrs;   // unique ptr set to free all smrt ptrs
 } SMRTPTR_GC = {-1};
 
-// invoked by atexit to free all ctor-alloc'd memory
+// invoked by atexit to free all smart-pointer allocated memory
 static void smrtptr_free_all() { 
   int i = 0;
   for(; i < SMRTPTR_GC.len; ++i) free(SMRTPTR_GC.ptrs[i]);
   if(SMRTPTR_GC.len > 0) free(SMRTPTR_GC.ptrs);
-  // if(SMRTPTR_GC.len > 0) printf("FREED %ld SMART POINTERS!\n", SMRTPTR_GC.len); // optional
+
+  #ifdef NOISYSMRTPTR
+  if(SMRTPTR_GC.len > 0) printf("FREED %ld SMART POINTERS!\n", SMRTPTR_GC.len); // optional
+  #endif
+
   SMRTPTR_GC.len = 0;
 }
 
@@ -37,6 +51,19 @@ static void throw_bad_alloc(char *alloc_type, char *smrtptr_h_fcn) {
   fprintf(stderr, "-:- FREEING ALLOCATED MEMORY THUS FAR AND TERMINATING PROGRAM -:-\n\n");
   exit(EXIT_FAILURE); // still frees any ptrs allocated thus far
 }
+
+// acts like assert, but exits rather than abort to free smart pointers
+#ifndef NDEBUG
+#define smrtassert(condition) ({\
+  if(!(condition)) {\
+    fprintf(stderr, "Smart Assertion failed: (%s), function %s, file %s, line %d.\n", #condition, __func__, __FILE__, __LINE__);\
+    fprintf(stderr, ">> Freeing Allocated Smart Pointers & Terminating Program.\n\n");\
+    exit(EXIT_FAILURE);\
+  }\
+})
+#else
+#define smrtassert(condition)
+#endif
 
 // smrtptr stores ptr passed as arg to be freed atexit
 void smrtptr(void *ptr) { 
