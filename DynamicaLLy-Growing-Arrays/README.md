@@ -3,11 +3,11 @@
 -----------------------------------------------------------
 ## 2 Reserved Strings & Integers:
 ### Reserved Integers:
-* _32202 ("ERROR")_</br>
-* _8080808 (EMPTY INITIAL VALUE)_
+* `32202` _("ERROR")_</br>
+* `8080808` _(EMPTY INITIAL VALUE)_
 ### Reserved Strings:
-* _"32202" ("ERROR")_</br>
-* _"8080808" (EMPTY INITIAL VALUE)_
+* `"32202"` _("ERROR")_</br>
+* `"8080808"` _(EMPTY INITIAL VALUE)_
 -----------------------------------------------------------
 ## Inclusion & Initalization:
 ### Include the Library:
@@ -29,35 +29,35 @@ DA_INIT(user_array_name, 'c'); // initialize 'c'har array
 DA_DNIT(user_array_name);
 ```
 -----------------------------------------------------------
-## Dynamic Array Public Interface:
+## Dynamic Array Public Interface (7 Functions):
 * _**NOTE: function names** intended to **indicate args** as well as actions!_
-#### INSERT (*create new cell*):
+#### 1) INSERT (*create new cell*):
 void da_idx_insert(user_array_name, index_No, [int || char *]);
 ```c
 da_idx_insert(user_array_name, 0, 1);
 da_idx_insert(user_array_name, 0, "one");
 ```
 
-#### DELETE (*remove cell*):
+#### 2) DELETE (*remove cell*):
 int da_idx_delete(user_array_name, index_No);
 ```c
 da_idx_delete(user_array_name, 1);
 ```
 
-#### ASSIGN (*edit existing cell*):
+#### 3) ASSIGN (*edit existing cell*):
 int da_idx_assign(user_array_name, index_No, [int || char *]);
 ```c
 da_idx_assign(user_array_name, 0, 1);
 da_idx_assign(user_array_name, 0, "one");
 ```
 
-#### LENGTH (*get array length*):
+#### 4) LENGTH (*get array length*):
 int da_length(user_array_name);
 ```c
 da_length(user_array_name);
 ```
 
-#### VALUE (*get element at an index*):
+#### 5) VALUE (*get element at an index*):
 int da_idx_ival(user_array_name, index_No);</br>
 char* da_idx_cval(user_array_name, index_No);
 ```c
@@ -66,14 +66,14 @@ da_idx_cval(user_array_name, 0); // returns 'c'har*
 ```
 * **_=> returns 32202/"32202" 'ERROR' if element DNE_** 
 
-#### INDEX OF (*get first index of an element*):
+#### 6) INDEX OF (*get first index of an element*):
 int da_idx_of(user_array_name, [int || char *]);
 ```c
 da_idx_of(user_array_name, 1);
 da_idx_of(user_array_name, "one");
 ```
 
-#### SWAP (*swap two cell positions*):
+#### 7) SWAP (*swap two cell positions*):
 int da_idx_swap(user_array_name, index_No1, index_No2);
 ```c
 da_idx_swap(user_array_name, 0, 1);
