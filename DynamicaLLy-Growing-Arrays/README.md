@@ -1,106 +1,104 @@
 # DynamicaLLy-Growing-Arrays!
-_C Library simulating dynamically growing arrays via doubly Linked Lists!_
+## _C Library simulating dynamically growing arrays via doubly Linked Lists!_
 -----------------------------------------------------------
-
-**Include Library:**
+## 2 Reserved Strings & Integers:
+### Reserved Integers:
+* _32202 ("ERROR")_</br>
+* _8080808 (EMPTY INITIAL VALUE)_
+### Reserved Strings:
+* _"32202" ("ERROR")_</br>
+* _"8080808" (EMPTY INITIAL VALUE)_
+-----------------------------------------------------------
+## Inclusion & Initalization:
+### Include the Library:
 ```c
 #include "dynarr.h"
 ```
-**Declare locally:**
+### Declare Locally:
 ```c
 DYN_AR user_array_name[1];
 ```
-**Then initialize "user_array_name" as per 'I'nt or 'C'har array:**
+#### _Then Initialize "user_array_name" as per 'I'nt or 'C'har Array:_
 ```c
 DA_INIT(user_array_name, 'i'); // initialize 'i'nt array
 DA_INIT(user_array_name, 'c'); // initialize 'c'har array
 ```
  
-**Deinitialize mallocs before ending program:**
+### Deinitialize (free) Dynamic Arrays Before Ending Program:
 ```c
 DA_DNIT(user_array_name);
 ```
-
-**===============================================================**<br/>
-**FUNCTION PROTOTYPES: _actionDatatype(user_array_name, index, [int || char \*])**<br/>
-**===============================================================**<br/>
-**ACTIONS: add - del - put - len - elt - idx - swap**<br/>
-**DATA TYPES: 'i'nt - 'c'har**<br/>
-**===============================================================**<br/>
-
-**ADD (*create new cell*):**</br>
-void _add(user_array_name, index_No, [int || char *]);
+-----------------------------------------------------------
+## Dynamic Array Public Interface:
+* _**NOTE: function names** intended to **indicate args** as well as actions!_
+#### INSERT (*create new cell*):
+void da_idx_insert(user_array_name, index_No, [int || char *]);
 ```c
-_add(user_array_name, 0, 1);
-_add(user_array_name, 0, "one");
+da_idx_insert(user_array_name, 0, 1);
+da_idx_insert(user_array_name, 0, "one");
 ```
 
-**DELETE (*remove cell*):**</br>
-int _del(user_array_name, index_No);
+#### DELETE (*remove cell*):
+int da_idx_delete(user_array_name, index_No);
 ```c
-_del(user_array_name, 1);
+da_idx_delete(user_array_name, 1);
 ```
 
-**PUT (*edit existing cell*):**</br>
-int _put(user_array_name, index_No, [int || char *]);
+#### ASSIGN (*edit existing cell*):
+int da_idx_assign(user_array_name, index_No, [int || char *]);
 ```c
-_put(user_array_name, 0, 1);
-_put(user_array_name, 0, "one");
+da_idx_assign(user_array_name, 0, 1);
+da_idx_assign(user_array_name, 0, "one");
 ```
 
-**LENGTH (*get array length*):**</br>
-int _len(user_array_name);
+#### LENGTH (*get array length*):
+int da_length(user_array_name);
 ```c
-_len(user_array_name);
+da_length(user_array_name);
 ```
 
-**ELEM (*get element at an index*):**</br>
-int _elti(user_array_name, index_No);</br>
-char* _eltc(user_array_name, index_No);
+#### VALUE (*get element at an index*):
+int da_idx_ival(user_array_name, index_No);</br>
+char* da_idx_cval(user_array_name, index_No);
 ```c
-_elti(user_array_name, 0);
-_eltc(user_array_name, 0);
+da_idx_ival(user_array_name, 0); // returns 'i'nt
+da_idx_cval(user_array_name, 0); // returns 'c'har*
 ```
 * **_=> returns 32202/"32202" 'ERROR' if element DNE_** 
 
-**INDEX (*get first index of an element*):**</br>
-int _idx(user_array_name, [int || char *]);
+#### INDEX OF (*get first index of an element*):
+int da_idx_of(user_array_name, [int || char *]);
 ```c
-_idx(user_array_name, 1);
-_idx(user_array_name, "one");
+da_idx_of(user_array_name, 1);
+da_idx_of(user_array_name, "one");
 ```
 
-**SWAP (*swap two cell positions*):**</br>
-int _swap(user_array_name, index_No1, index_No2);
+#### SWAP (*swap two cell positions*):
+int da_idx_swap(user_array_name, index_No1, index_No2);
 ```c
-_swap(user_array_name, 0, 1);
+da_idx_swap(user_array_name, 0, 1);
 ```
 
-**===============================================================**<br/>
-_**MULTIDIMENSIONAL DYNAMIC ARRAYS:**_
-**===============================================================**<br/>
-**Local Declaration:**<br/>
+-----------------------------------------------------------
+## _MULTIDIMENSIONAL DYNAMIC ARRAYS:_
+### Local Declaration:
 ```c
-DYN_MAR user_marray_name[USER_MAR_SIZE];
+DYN_MAR user_marray_name[USER_MAR_SIZE]; // DYN(amic) M(ultiple) AR(rays)
 ```
-_=> M(ultiple)AR(rays)_
 
-**Initialization post-declaration:**
+### Initialization Post-Declaration:
 ```c
 DMA_INIT(user_marray_name, USER_MAR_SIZE, 'i'); // initialize 'i'nt multi-dimensional array
 DMA_INIT(user_marray_name, USER_MAR_SIZE, 'c'); // initialize 'c'har multi-dimensional array
 ```
- 
- 
-**Deinitialization before ending program:**
+### Deinitialization Before Ending Program:
 ```c
 DMA_DNIT(user_marray_name);
 ```
- 
- **FUNCTIONALITY => Identical to 1D, save for 2 key changes:**
-1) All func names end with 'm' ['m'ulti-Dim]
-2) All take ACCESS_INDEX of specific dynamic array to alter in 2D marray
+### Public Interface => _Identical to 1D, save for 2 Key Changes_:
+1) All function names have "`dma_`" instead of "`da_`" prefix
+2) All take `ACCESS_INDEX` of specific dynamic array to alter in 2D marray
 ```c
-_len(user_array_name); // Becomes:
-_lenm(user_marray_name[ACCESS_INDEX]);
+da_length(user_array_name); // Becomes:
+dma_length(user_marray_name[ACCESS_INDEX]);
 ```
