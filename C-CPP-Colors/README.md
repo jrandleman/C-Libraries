@@ -15,7 +15,7 @@ int main() {
   printf("%sHello There!%s", bold blue, reset); 
   
   // "rprintf" = "printf" but 'r'esets fonts automatically at the end!
-  rprintf("%sHello Again!%s", bold blue, reset); 
+  rprintf("%sHello Again!", bold blue); 
   
   return 0;
 }
@@ -43,17 +43,17 @@ int main() {
 **2)** `keydown(MOVE_AMOUNT)`_: Moves cursor_ `MOVE_AMOUNT` _lines down_</br>
 **3)** `keyright(MOVE_AMOUNT)`_: Moves cursor_ `MOVE_AMOUNT` _spaces right_</br>
 **4)** `keyleft(MOVE_AMOUNT)`_: Moves cursor_ `MOVE_AMOUNT` _spaces left_</br>
-* _**Note:** passed to an output means (ie_ `printf()` _,_ `std::cout` _, etc.) as if a color or decoration!_
+* _**Note:** passed to any means of output (ie_ `printf()` _,_ `std::cout` _, etc.) as if a color or decoration!_
 
 ### Resetting Syntax & Clearing Terminal's Screen:
 **1)** `reset`_: String literal resetting Terminal's syntax styles_</br>
-**2)** `clear`_: String literal clearing Terminal's screen (exactly like "clear" in the cmd line)_</br>
+**2)** `clear`_: String literal clearing Terminal's screen (exactly like_ `clear` _in the cmd line)_</br>
 * _**Note:** colors/decoration remain active in Terminal until passed_ `reset` _!_
 
 ### Text Decoration (_Creates a String Literal_):
-**1)** `bold`_: bold text_</br>
-**2)** `line`_: underlined text_</br>
-**3)** `rev`_: reverse the current background & text colors_
+**1)** `bold`_: Bold text_</br>
+**2)** `line`_: Underlined text_</br>
+**3)** `rev`_: Reverse the current background & text colors_
 
 ### Text Colors (_8 Basic Colors (headers) & 8 Gradients Each (columns)!_):
 * _**Note:** gradients go from darkest (1) to brightest (8)!_</br>
