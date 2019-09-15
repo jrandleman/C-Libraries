@@ -5,8 +5,19 @@
 // 1) http://www.lihaoyi.com/post/BuildyourownCommandlinewithANSIescapecodes.html
 // 2) http://www.climagic.org/mirrors/VT100_Escape_Codes.html
 
+#ifndef COLOR_H_
+#define COLOR_H_
+
 #include <stdio.h>
 #include <string.h>
+
+/******************************************************************************
+* C++ std::endl ALTERNATIVE: "reset" + "\n"
+******************************************************************************/
+
+#ifdef __cplusplus
+namespace color { const char* rendl = "\033[0m\n"; }
+#endif
 
 /******************************************************************************
 * OUTPUT + RESET SYNTAX
@@ -285,3 +296,4 @@ void showColors() {
   }
   printf("\n");
 }
+#endif
