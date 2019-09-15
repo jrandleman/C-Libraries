@@ -283,9 +283,9 @@ void showColors() {
     for(j = 0; j < 8; ++j)
       (i == 0)
         ? rprintf("%s\033[48;5;%dm%s%d ",
-          white8, colors[i][j], basic_text_colors[i], j + 1)
+          white8, colors[i][j], basic_background_colors[i], j + 1)
         : rprintf("%s\033[48;5;%dm%s%d ",
-          black, colors[i][j], basic_text_colors[i], j + 1);
+          black, colors[i][j], basic_background_colors[i], j + 1);
     printf("\n");
   }
   for(i = 0; i < 8; ++i) { // output text color gradients
