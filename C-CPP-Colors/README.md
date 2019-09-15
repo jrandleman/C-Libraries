@@ -27,7 +27,12 @@ int main() {
 
 int main() {
   // output bold/underlined blue text
-  std::cout << bold line blue << "Hello There!" << reset << std::endl;
+  // note that the macros automatically concat w/ the string literal!
+  std::cout << bold line blue "Hello" reset " There!" << std::endl;
+  
+  // compiling as C++ activates the "color" namespace & its "rendl" 
+  // alternative to "std::endl" (acts as: reset + "\n")
+  std::cout << bold line blue "Hello" << color::rendl << " Again!\n";
   return 0;
 }
 ```
@@ -37,6 +42,7 @@ int main() {
 **1)** `rprintf(...)` _=_ `printf(...); printf(reset);`</br>
 **2)** `rsprintf(str, ...)` _=_ `sprintf(str, ...); sprintf(&str[strlen(str)], reset);`</br>
 **3)** `rfprintf(filename, ...)` _=_ `fprintf(filename, ...); fprintf(filename, reset);`
+* _**Note:** when compiled as C++,_ `color.h` _activates its_ `color` _namespace's_ `rendl` _alternative to_ `std::endl` _!_
 
 ### Cursor Movement (_Creates a String Literal_):
 **1)** `keyup(MOVE_AMOUNT)`_: Moves cursor_ `MOVE_AMOUNT` _lines up_</br>
@@ -86,4 +92,4 @@ int main() {
 
 
 ### \*Outputting All of `color.h`'s Text & Background Colors (function):
-`showColors()`_: printf's all of_ `color.h`_'s basic & gradient text & background colors!_
+`showColors()`_: printf's all of_ `color.h`_'s basic/gradient text & background colors!_
