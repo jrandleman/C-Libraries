@@ -1,5 +1,6 @@
 // AUTHOR: JORDAN RANDLEMAN - color.h - Easier Interface For ANSI Esc Codes
 // -:- COLORS/TEXT-DECORATION IN TERMINAL FOR BOTH C & C++ -:-
+// -:- OUTPUTTING ASCII ART ALPHABET FOR BOTH C & C++ -:-
 
 // Sources For ANSI Esc Codes: 
 // 1) http://www.lihaoyi.com/post/BuildyourownCommandlinewithANSIescapecodes.html
@@ -9,26 +10,20 @@
 #define COLOR_H_
 
 #include <stdio.h>
+#include <ctype.h>
 #include <string.h>
-
-/******************************************************************************
-* C++ std::endl ALTERNATIVE: "reset" + "\n"
-******************************************************************************/
-
-#ifdef __cplusplus
-namespace color { const char* rendl = "\033[0m\n"; }
-#endif
 
 /******************************************************************************
 * OUTPUT + RESET SYNTAX
 ******************************************************************************/
 
 // output macros automatically 'r'esetting SYNTAX after output
-#define rprintf(...) ({printf(__VA_ARGS__);printf("\033[0m");})
-#define rsprintf(STR, ...)\
-  ({sprintf(STR, __VA_ARGS__);sprintf(&STR[strlen(STR)], "\033[0m");})
-#define rfprintf(FILENAME, ...)\
-  ({fprintf(FILENAME, __VA_ARGS__);fprintf(FILENAME, "\033[0m");})
+#define rprintf(...) ({printf(__VA_ARGS__);printf("\033[0m");fflush(stdout);})
+#define rsprintf(RS_STR, ...)\
+  ({sprintf(RS_STR, __VA_ARGS__);sprintf(&RS_STR[strlen(RS_STR)], "\033[0m");})
+#define rfprintf(RF_FPTR, ...)({\
+  fprintf(RF_FPTR,__VA_ARGS__);fprintf(RF_FPTR,"\033[0m");fflush(RF_FPTR);\
+})
 
 /******************************************************************************
 * KEYPAD ARROW MOVEMENTS
@@ -51,7 +46,7 @@ namespace color { const char* rendl = "\033[0m\n"; }
 #define clear "\033[2J"
 
 /******************************************************************************
-* DECORATIONS - BOLD, UNDERLINE, REVERSE BACKGROUND/TEXT COLORS
+* TEXT DECORATION - BOLD, UNDERLINE, REVERSE BACKGROUND/TEXT COLORS
 ******************************************************************************/
 
 // bold, underline, & reverse background/text colors
@@ -268,7 +263,7 @@ void showColors() {
 
   // OUTPUT BASIC COLORS
   int i, j;
-  rprintf("\n%s>> %sBasic 8 Colors:\n%s  bblack ", bold, reset bold line,
+  rprintf("\n%s>> %sBasic 8 Colors:\n%s  bblack ", bold, line,
     reset white8 bblack);
   for(i = 1; i < 8; ++i) // output basic background colors
     rprintf("%s\033[4%dm%s ", black, i, basic_background_colors[i]);
@@ -278,7 +273,7 @@ void showColors() {
   
 
   // OUTPUT COLOR GRADIENTS
-  rprintf("\n\n%s>> %sExtended Color Gradients:\n", bold, reset bold line);
+  rprintf("\n\n%s>> %sExtended Color Gradients:\n", bold, line);
   for(i = 0; i < 8; ++i) { // output background color gradients
     for(j = 0; j < 8; ++j)
       (i == 0)
@@ -296,4 +291,241 @@ void showColors() {
   }
   printf("\n");
 }
-#endif
+
+/******************************************************************************
+* PRIVATE INTERFACES: ASCII ART PRINTING HELPER FUNCTIONS
+******************************************************************************/
+
+// max strlen, ASCII art alphabet length, # rows per ASCII art letter, '\b' ASCII art idx
+static const int MAX_ASCII_ART_BUFFER_LENGTH = 1000001, // gigabyte + '\0'
+                 ASCII_ART_ALPHABET_LENGTH   = 73,
+                 TOTAL_ASCII_ART_ROWS        = 3,       // top mid, bot
+                 BACKSPACE_ART_IDX           = ASCII_ART_ALPHABET_LENGTH - 1;
+
+
+// chars w/ ASCII art equivalents (lowercase letters too, but get uppercased)
+static const char *VALID_ASCII_ART_CHARS     = 
+"\t\n !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`{|}~\b";
+
+
+// ASCII art alphabet sorted by ascii code.
+// => '\b' char repn is missing as the # of '\b's used is evaluated at run-time
+//    as per width of the previously printed char. 
+// => each row's last string repns non-lowercase chars also not found in 
+//    "VALID_ASCII_ART_CHARS"
+static const char *ASCII_ART_ROW_TOP[ASCII_ART_ALPHABET_LENGTH] = {"\t\t", "newline",  "      ", "  // ", "(/(/ ", "_||_||_ ", "//=||==\\ ",    "@ // ", "((^))   ",     ")) ", " // ",   "\\\\  ", " \\\\|//  ", "   ||    ", "   ", "      ", "    ", "  // ", "//=\\\\ ", "//|  ", "(==\\\\  ", "/==\\\\ ", " //||  ", " /|===) ",   "//==) ",   "(====) ", "((^)) ",   "//==|\\ ",  "    ", "    ", "   ",   "        ", "   ",   "//^\\\\ ", " //==\\\\ ", " //^\\\\  ", "||^\\\\  ", "//===) ",   "||^\\\\  ", "/|==\\ ", "/===\\ ", "//===\\ ",  "|| || ", "==== ", "(====) ",   "||// ",   "/|    ",  "/\\\\  //\\ ", "/\\\\ || ", "//==\\\\ ", "/|==\\\\ ", "//==\\\\ ",   "||^\\\\ ", " //==) ",   "==== ", "/| |\\ ",  "/|  |\\ ",  "/| /\\ |\\ ",   "\\\\ // ", "(\\  /) ",  "/===)  ", "|=] ", "\\\\   ", "[=| ", "//^\\\\ ", "      ", "\\\\ ", "(( ", "|| ", ")) ", "      ",  "###### "};
+static const char *ASCII_ART_ROW_MID[ASCII_ART_ALPHABET_LENGTH] = {"\t\t", "newline",  "      ", " //  ", "     ", "_||_||_ ", "\\\\=||=\\\\ ", " //  ", "//^\\\\// ",   "   ", "||  ",   " || ",   "<==*==> ",   "[==++==] ", "_  ", "+===+ ", "    ", " //  ", "| + | ",   " ||  ", " __//  ",   "  =|| ",   "((=||) ", " \\|==\\  ", "||/=\\ ",  "   //  ", "//^\\\\ ", "\\\\==|| ", "<*> ", "<*> ", "// ",   "[=====] ", "\\\\ ", "  _// ",   "((  _|| ",   "|/===\\| ",  "||-//_ ",   "||     ",   "||  )) ",   "||=   ",  "|==   ",  "|| ==\\ ",  "|===| ", " ||  ", "_ ||   ",   "|((  ",   "||    ",  "||\\\\//|| ",  "||\\\\|| ", "||  || ",   "||==// ",   "|| _|| ",     "||_// ",   " \\==\\  ", " ||  ", "|| || ",   "\\\\  // ", "\\\\//\\\\// ", " )X(  ",   " \\\\//  ", "  //   ", "|   ", " \\\\  ", "  | ", "      ",   "      ", "   ",   "<< ", "|| ", ">> ", "//\\// ", "###### "};
+static const char *ASCII_ART_ROW_BOT[ASCII_ART_ALPHABET_LENGTH] = {"\t\t", "newline",  "      ", "<*>  ", "     ", " || ||  ", "\\==||=// ",    "// @ ", "\\\\_//\\\\ ", "   ", " \\\\ ", "//  ",   " //|\\\\  ", "   ||    ", ")) ", "      ", "<*> ", "//   ", "\\\\=// ", "==== ", "(====/ ",   "\\==// ",  "   ||  ", "\\====/  ",  "\\\\==/ ", "  //   ", "\\\\_// ", "    \\| ",  "<*> ", " )) ", "\\\\ ", "[=====] ", "// ",   "  @   ",   " \\\\(_|| ", "||   || ",   "||__// ",   "\\\\===) ", "||_//  ",   "\\|==/ ", "||    ",  "\\\\==// ", "|| || ", "==== ", "\\\\//   ", "||\\\\ ", "\\===/ ", "|| \\/ || ",   "|| \\// ",  "\\\\==// ", "||     ",   "\\\\==\\\\ ", "|| \\\\ ", "\\==//  ",  " ||  ", "\\\\=// ", " \\\\//  ", " \\/  \\/  ",   "// \\\\ ", "  ||   ",   " (===/ ", "|=] ", "  \\\\ ", "[=| ", "      ",   "+===+ ", "   ",   "(( ", "|| ", ")) ", "      ",  "###### "};
+static const char **ASCII_ART_MATIRIX[TOTAL_ASCII_ART_ROWS] = {
+  ASCII_ART_ROW_TOP, ASCII_ART_ROW_MID, ASCII_ART_ROW_BOT
+};
+
+
+// initialize array with zero's (wipes garbage memory)
+#define FLOOD_ZEROS(FZ_ARR, FZ_ARR_LEN)({\
+  int FLOOD_Z_i=0;\
+  for(; FLOOD_Z_i<FZ_ARR_LEN; ++FLOOD_Z_i) FZ_ARR[FLOOD_Z_i]=0;\
+})
+
+
+// given char ARRAY (not literal) converts all lowercase to uppercase
+static void string_to_upper(char *p) {while(*p != '\0') *p = toupper(*p), ++p;}
+
+
+// returns hashed idx of ASCII-Art letter position in rows of ASCII_ART_MATIRIX
+static int ascii_art_idx_hash_function(const char c) {
+  // idx of ASCII-art-unkown char repn & total prefixing cntrl chars '\t\n' 
+  const int UNKOWN_ART_IDX = ASCII_ART_ALPHABET_LENGTH - 2,
+            TOTAL_CNTRL_CHARS = 2; // '\t', '\n'
+  // check if char has an equivalent repn in the ASCII art alphabet
+  if(strrchr(VALID_ASCII_ART_CHARS, c) == NULL)
+    return UNKOWN_ART_IDX;
+  // return valid ASCII-Art char's hashed idx 
+  if(c == '\b') 
+    return BACKSPACE_ART_IDX;
+  return (c == '\t' || c == '\n')
+    ? c - '\t'
+    : TOTAL_CNTRL_CHARS + c - ' ' - ((c >= 'a') * 26);
+}
+
+
+// fills "idxs_container[]" with the hashed idx of each char in "output[]"
+static void get_hashed_art_idxs(int idxs_container[], const char non_art_buffer[]) {
+  int idx = 0;
+  const int non_art_length = strlen(non_art_buffer);
+  for(; idx < non_art_length; ++idx)
+    idxs_container[idx] = ascii_art_idx_hash_function(non_art_buffer[idx]);
+}
+
+
+// fills "ascii_art_buffer" with "non_art_string"'s chars in ASCII Art
+static void convert_non_art_string_to_ascii_art(char non_art_string[], char ascii_art_buffer[]) {
+  const int NEWLINE_ART_IDX = 1; // idx (hash value) of '\n' ASCII art repn
+
+  // array of hashed letter idxs for ASCII-art variant's row positions
+  int ascii_art_letter_idxs[MAX_ASCII_ART_BUFFER_LENGTH];
+  FLOOD_ZEROS(ascii_art_letter_idxs, MAX_ASCII_ART_BUFFER_LENGTH);
+
+  // convert lowercase letters to uppercase, non_art_buffer holds 
+  // uppercased/formatted "non_art_string" & "ascii_art_buffer" holds ascii art
+  char non_art_buffer[MAX_ASCII_ART_BUFFER_LENGTH], *p = ascii_art_buffer;
+  FLOOD_ZEROS(non_art_buffer, MAX_ASCII_ART_BUFFER_LENGTH); 
+  strcpy(non_art_buffer, non_art_string), string_to_upper(non_art_buffer);
+
+  // get hashed idxs of letter ASCII-art variant positions in the "ASCII_ART_MATIRIX"
+  get_hashed_art_idxs(ascii_art_letter_idxs, non_art_buffer);
+
+  // get top, mid, & bot rows of ascii art, sprintf'ing each until '\0' or '\n' is reached (if '\n' 
+  // reached, restart the process of getting rows but ONLY for chars AFTER the '\n' in "non_art_buffer")
+  int prior_char_idx = -1, prior_char_length, string_start, newline_or_end, idx, row, i;
+  const int non_art_length = strlen(non_art_buffer);
+  for(string_start = 0; string_start < non_art_length; ++string_start) {
+    // for each ASCII art row
+    for(row = 0; row < TOTAL_ASCII_ART_ROWS; ++row) { 
+      // up until '\0' or '\n' is reached
+      for(idx = string_start; idx < non_art_length && ascii_art_letter_idxs[idx] != NEWLINE_ART_IDX; ++idx) {
+        // if at a backspace, move back the width of the preceding character
+        if(ascii_art_letter_idxs[idx] == BACKSPACE_ART_IDX) {
+          if(prior_char_idx > -1) {
+            prior_char_length = strlen(ASCII_ART_MATIRIX[row][ascii_art_letter_idxs[prior_char_idx]]);
+            for(i = 0; i < prior_char_length; ++i) sprintf(p, "\b"), p += strlen(p);
+            --prior_char_idx;
+          }
+        } else // non-backspace
+          prior_char_idx = idx, 
+          sprintf(p, "%s", ASCII_ART_MATIRIX[row][ascii_art_letter_idxs[idx]]), 
+          p += strlen(p);
+      }
+      newline_or_end = idx, sprintf(p, "\n"), p += strlen(p);
+
+
+    }
+    string_start = newline_or_end;
+  }
+  *p = '\0';
+}
+
+
+// fprintf ascii art for "non_art_string" to "fptr"
+static void ascii_art_fprintf_non_art_string(FILE *fptr, char non_art_string[]) {
+  // string to hold ascii art variants of chars in client's "non_art_string"
+  char ascii_art_buffer[MAX_ASCII_ART_BUFFER_LENGTH];
+  FLOOD_ZEROS(ascii_art_buffer, MAX_ASCII_ART_BUFFER_LENGTH);
+  convert_non_art_string_to_ascii_art(non_art_string, ascii_art_buffer);
+  fprintf(fptr, "%s", ascii_art_buffer), fflush(fptr);
+}
+
+/******************************************************************************
+* PUBLIC INTERFACES: ASCII ART PRINTING MACROS & "STRLEN" FOR ASCII ART
+******************************************************************************/
+
+// fprintf the ASCII Art equivalent of the string to "FPRINTA_FILEPTR"
+// sprintf's 1st to splice in any "%s" (or other) substitutions prior 
+// to converting string to ASCII Art
+#define fprinta(FPRINTA_FILEPTR, ...) ({\
+  char fprinta_non_art_string[MAX_ASCII_ART_BUFFER_LENGTH];\
+  FLOOD_ZEROS(fprinta_non_art_string, MAX_ASCII_ART_BUFFER_LENGTH);\
+  sprintf(fprinta_non_art_string, __VA_ARGS__);\
+  ascii_art_fprintf_non_art_string(FPRINTA_FILEPTR, fprinta_non_art_string);\
+})
+
+
+// sprintf the ASCII Art equivalent of the string into "SPRINTA_STR"
+// sprintf's 1st to splice in any "%s" (or other) substitutions prior 
+// to converting string to ASCII Art
+#define sprinta(SPRINTA_STR, ...) ({\
+  char sprinta_non_art_string[MAX_ASCII_ART_BUFFER_LENGTH];\
+  FLOOD_ZEROS(sprinta_non_art_string, MAX_ASCII_ART_BUFFER_LENGTH);\
+  sprintf(sprinta_non_art_string, __VA_ARGS__);\
+  convert_non_art_string_to_ascii_art(sprinta_non_art_string, SPRINTA_STR);\
+})
+
+
+// printf the ASCII Art equivalent of the string, 
+#define printa(...) fprinta(stdout, __VA_ARGS__)
+
+
+// "strlen" for ascii art: returns the length needed to contain 
+// "non_art_string"'s ascii-art equivalent
+int artlen(char *non_art_string) {
+  char ascii_art_buffer[MAX_ASCII_ART_BUFFER_LENGTH];
+  FLOOD_ZEROS(ascii_art_buffer, MAX_ASCII_ART_BUFFER_LENGTH);
+  convert_non_art_string_to_ascii_art(non_art_string, ascii_art_buffer);
+  return strlen(ascii_art_buffer);
+}
+
+
+// printf's entire ASCII art alphabet (demo for library info, like showColors() above)
+void showAlphabet() {
+  int row, letter, cluster, remaining_letters,
+      cluster_length = 13; // # of letters to print at once
+  printf("\n\033[1m>> \033[4mASCII Art Alphabet\033[0m\033[1m:\033[0m");
+  printf("\n\033[1m   >> \033[4mLower-Case Letters Are Upper-Cased!\033[0m");
+  printf("\n\033[1m   >> \033[4mCharacters Supported\033[0m\033[1m:\033[0m ");
+  printf("!\"#$%%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`{|}~");
+  printf("\n\033[1m   >> \033[4m'Space' & 3 Control Chars Supported\033[0m\033[1m:\033[0m ' ', '\\b', '\\t', '\\n'\033[0m\n\n");
+  // "cluster = 3" to skip ' ', '\t' & '\n',
+  // "ASCII_ART_ALPHABET_LENGTH - 2" to skip unkown char repn && '\b'
+  for(cluster = 3; cluster < ASCII_ART_ALPHABET_LENGTH - 2; cluster += cluster_length) {
+    // combine the last row of 3 slim chars w/ the 2nd to last row
+    if(cluster + 2 * cluster_length > ASCII_ART_ALPHABET_LENGTH - 2) cluster_length = 16;
+    remaining_letters = (cluster + cluster_length > ASCII_ART_ALPHABET_LENGTH - 2)
+                        ? (ASCII_ART_ALPHABET_LENGTH - 2)
+                        : (cluster + cluster_length);
+    for(row = 0; row < TOTAL_ASCII_ART_ROWS; ++row) {
+      printf("   ");
+      for(letter = cluster; letter < remaining_letters; ++letter)
+        printf("%s", ASCII_ART_MATIRIX[row][letter]);
+      printf("\n");
+    }
+    printf("\n");
+  }
+}
+
+/******************************************************************************
+* C++ std::endl & std::cout ALTERNATIVES: "reset" + "\n" & outputting ASCII Art
+******************************************************************************/
+
+#ifdef __cplusplus
+#include <string>
+#include <ostream>
+namespace color { 
+  class ostream_ASCII_Art {
+  private:
+    // output a std::string
+    friend ostream_ASCII_Art &operator<<(ostream_ASCII_Art &ac, std::string str) {
+      char buff[MAX_ASCII_ART_BUFFER_LENGTH];
+      FLOOD_ZEROS(buff, MAX_ASCII_ART_BUFFER_LENGTH);
+      sprinta(buff, "%s", str.c_str());
+      std::cout << buff;
+      return ac;
+    }
+    // output a C-style string
+    friend ostream_ASCII_Art &operator<<(ostream_ASCII_Art &ac, char *str) {
+      char buff[MAX_ASCII_ART_BUFFER_LENGTH];
+      FLOOD_ZEROS(buff, MAX_ASCII_ART_BUFFER_LENGTH);
+      sprinta(buff, "%s", str);
+      std::cout << buff;
+      return ac;
+    }
+    // output a single character
+    friend ostream_ASCII_Art &operator<<(ostream_ASCII_Art &ac, char c) {
+      char buff[MAX_ASCII_ART_BUFFER_LENGTH];
+      FLOOD_ZEROS(buff, MAX_ASCII_ART_BUFFER_LENGTH);
+      sprinta(buff, "%c", c);
+      std::cout << buff;
+      return ac;
+    }
+  };
+
+  // NOTE: since ASCII Art deals with matrices, sequential invocations of
+  //       the overloaded '<<' operator have an implicit '\n' between them
+  //       => I.E.:        color::acout << "hello" << "there" 
+  //          O/P'S AS IF: color::acout << "hello\n" << "there" 
+
+  ostream_ASCII_Art acout;         // color::aout = std::cout, but outputting ASCII art
+  const char* rendl = "\033[0m\n"; // color::rendl = std::endl + resets ANSI Esc Keys/Colors
+}
+#endif // endif C++
+
+#endif // endif color.h not already #include'd
