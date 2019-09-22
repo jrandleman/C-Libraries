@@ -516,6 +516,14 @@ namespace color {
       std::cout << buff;
       return ac;
     }
+    // output std::endl
+    friend ostream_ASCII_Art &operator<<(ostream_ASCII_Art &ac, std::ostream&(*newline)(std::ostream&)) {
+      char buff[MAX_ASCII_ART_BUFFER_LENGTH];
+      FLOOD_ZEROS(buff, MAX_ASCII_ART_BUFFER_LENGTH);
+      sprinta(buff, "%c", '\n');
+      std::cout << buff;
+      return ac;
+    }
   };
 
   // NOTE: since ASCII Art deals with matrices, sequential invocations of
