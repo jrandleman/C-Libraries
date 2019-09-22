@@ -1,5 +1,6 @@
 # Color.h
 ## _Color Text & Background, Decorate Text, & Manipulate the Cursor in Terminal!_
+## _Also Output String ASCII Art Equivalents in Terminal!_
 ### _Friendlier C & C++ Interface for ANSI Escape Codes!_
 -----------
 ## Using `color.h`:
@@ -17,6 +18,9 @@ int main() {
   // "rprintf" = "printf" but 'r'esets fonts automatically at the end!
   rprintf("%sHello Again!", bold blue); 
   
+  // "printf" but outputting the the string using ASCII art for its characters
+  printa("Good%s!", "bye");
+  
   return 0;
 }
 ```
@@ -33,11 +37,14 @@ int main() {
   // compiling as C++ activates the "color" namespace & its "rendl" 
   // alternative to "std::endl" (acts as: reset + "\n")
   std::cout << bold line blue "Hello" << color::rendl << " Again!\n";
+  
+  // like std::cout but outputs the ASCII art equivalent of the string
+  color::acout << "Goodbye!\n";
   return 0;
 }
 ```
 -----------
-## `color.h` Features (_All Macros_*):
+## `color.h` Coloring & Decoration (_All Macros_*):
 ### O/P:
 **1)** `rprintf(...)` _=_ `printf(...); printf(reset);`</br>
 **2)** `rsprintf(str, ...)` _=_ `sprintf(str, ...); sprintf(&str[strlen(str)], reset);`</br>
@@ -93,3 +100,16 @@ int main() {
 
 ### \*Outputting All of `color.h`'s Text & Background Colors (function):
 `showColors()`_: printf's all of_ `color.h`_'s basic/gradient text & background colors!_
+
+-----------
+## `color.h` ASCII Art Output Replacements:
+
+### printf, sprintf, fprintf (& "color::acout" for C++):
+* _Use_ `printa`_,_ `sprinta`_, &_ `fprinta` _instead to output the ASCII-Art Equivalent String_
+  * _**NOTE:** Compiling w/ C++ enables using the_ `color::acout` _object for_ `cout` _but with ASCII art!_
+
+### strlen
+* _Use_ `artlen` _instead to see the length that the string's ASCII art equivalent_
+
+### Outputting `color.h`'s ASCII Art Alphabet:
+`showAlphabet()`_: printf's all of_ `color.h`_'s supported ASCII art characters!_
