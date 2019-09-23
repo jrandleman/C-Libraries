@@ -39,8 +39,9 @@ int main() {
   // alternative to "std::endl" (acts as: reset + "\n")
   std::cout << bold line blue "Hello" << color::rendl << " Again!\n";
   
-  // like std::cout but outputs the ASCII art equivalent of the string
-  color::acout << "Goodbye!\n";
+  // "printf" but outputting the the string using ASCII art for its characters (in red font)
+  // NOTE: ASCII art printing fcns implicitly invoke "reset" at the end
+  printa("%sGood%s!", red6, "bye");
   return 0;
 }
 ```
@@ -103,14 +104,32 @@ int main() {
 `showColors()`_: printf's all of_ `color.h`_'s basic/gradient text & background colors!_
 
 -----------
+## `color.h` ASCII Art Supported Characters:
+### Lower-Case Letters Are Converted To Upper-Case!
+```c
+"hello!" // becomes: "HELLO!"
+```
+### Valid Characters:
+```c
+"!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`{|}~"
+```
+### Also Supports 'Space' & 3 Control Characters:
+```c
+"\b\t\n"
+```
+### As Well As All Colors/Text Decorations This Library Has To Offer!
+```c
+printa("%shello!\n", cyan6 rev bold);
+```
+
+-----------
 ## `color.h` ASCII Art Output Replacements:
 
-### printf, sprintf, fprintf (& "color::acout" for C++):
+### printf, sprintf, fprintf:
 * _Use_ `printa`_,_ `sprinta`_, &_ `fprinta` _instead to output the ASCII-Art Equivalent String_
-  * _**NOTE:** Compiling w/ C++ enables using the_ `color::acout` _object for_ `cout` _but with ASCII art!_
 
 ### strlen
-* _Use_ `artlen` _instead to see the length that the string's ASCII art equivalent_
+* _Use_ `artstrlen` _instead to see the length that the string's ASCII art equivalent_
 
 ### Outputting `color.h`'s ASCII Art Alphabet:
 `showAlphabet()`_: printf's all of_ `color.h`_'s supported ASCII art characters!_
