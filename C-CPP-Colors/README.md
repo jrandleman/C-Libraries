@@ -104,6 +104,57 @@ int main() {
 `showColors()`_: printf's all of_ `color.h`_'s basic/gradient text & background colors!_
 
 -----------
+## `color.h` ASCII Art Output Replacements:
+
+### printf, sprintf, fprintf:
+* _Use_ `printa`_,_ `sprinta`_, &_ `fprinta` _instead to output the ASCII-Art Equivalent String_
+```c
+printa("enjoy color.h!");
+/*
+ * OUTPUT:
+ *
+ * /|==\ /\\ || (====) //==\\ (\  /)       //===) //==\\ /|    //==\\ ||^\\     || ||   // 
+ * ||=   ||\\|| _ ||   ||  ||  \\//        ||     ||  || ||    ||  || ||_//     |===|  // 
+ * \|==/ || \// \\//   \\==//   ||         \\===) \\==// \===/ \\==// || \\ <*> || || <*>  
+ *
+ */
+```
+
+
+### strlen
+* _Use_ `artstrlen` _instead to see the length that the string's ASCII art equivalent_
+
+### Outputting `color.h`'s ASCII Art Alphabet:
+`showAlphabet()`_: printf's all of_ `color.h`_'s supported ASCII art characters!_
+```c
+showAlphabet();
+/*
+ * OUTPUT:
+ *
+ *     // (/(/ _||_||_ //=||==\ @ // ((^))   ))  // \\   \\|//     ||             
+ *    //       _||_||_ \\=||=\\  //  //^\\//    ||   || <==*==> [==++==] _  +===+ 
+ *   <*>        || ||  \==||=// // @ \\_//\\     \\ //   //|\\     ||    ))       
+ *
+ *         // //=\\ //|  (==\\  /==\\  //||   /|===) //==) (====) ((^)) //==|\     
+ *        //  | + |  ||   __//    =|| ((=||)  \|==\  ||/=\    //  //^\\ \\==|| <*> 
+ *   <*> //   \\=// ==== (====/ \==//    ||  \====/  \\==/   //   \\_//     \| <*> 
+ *
+ *                     //^\\  //==\\  //^\\  ||^\\  //===) ||^\\  /|==\ /===\ //===\ 
+ *   <*> // [=====] \\   _// ((  _|| |/===\| ||-//_ ||     ||  )) ||=   |==   || ==\ 
+ *    )) \\ [=====] //   @    \\(_|| ||   || ||__// \\===) ||_//  \|==/ ||    \\==// 
+ *
+ *   || || ==== (====) ||// /|    /\\  //\ /\\ || //==\\ /|==\\ //==\\ ||^\\  //==) ==== 
+ *   |===|  ||  _ ||   |((  ||    ||\\//|| ||\\|| ||  || ||==// || _|| ||_//  \==\   ||  
+ *   || || ==== \\//   ||\\ \===/ || \/ || || \// \\==// ||     \\==\\ || \\ \==//   ||  
+ *
+ *   /| |\ /|  |\ /| /\ |\ \\ // (\  /) /===)  |=] \\   [=| //^\\       \\ (( || ))       
+ *   || || \\  // \\//\\//  )X(   \\//    //   |    \\    |                << || >> //\// 
+ *   \\=//  \\//   \/  \/  // \\   ||    (===/ |=]   \\ [=|       +===+    (( || ))       
+ *
+ */
+```
+
+-----------
 ## `color.h` ASCII Art Supported Characters:
 ### Lower-Case Letters Are Converted To Upper-Case!
 ```c
@@ -121,15 +172,3 @@ int main() {
 ```c
 printa("%shello!\n", cyan6 rev bold);
 ```
-
------------
-## `color.h` ASCII Art Output Replacements:
-
-### printf, sprintf, fprintf:
-* _Use_ `printa`_,_ `sprinta`_, &_ `fprinta` _instead to output the ASCII-Art Equivalent String_
-
-### strlen
-* _Use_ `artstrlen` _instead to see the length that the string's ASCII art equivalent_
-
-### Outputting `color.h`'s ASCII Art Alphabet:
-`showAlphabet()`_: printf's all of_ `color.h`_'s supported ASCII art characters!_
