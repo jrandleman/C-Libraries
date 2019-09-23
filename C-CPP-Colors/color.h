@@ -303,49 +303,6 @@ void showColors() {
 }
 
 /******************************************************************************
-* ASCII CHARS IN ASCII ART
-******************************************************************************/
-
-/*
- * TODO:
- * (1) ASCII ART ALPHABET VARIANT USING REVERSE-COLORED WHITESPACES
- * (2) RENAME LIBRARY FROM COLOR.H TO BE MORE BROAD (ENCAPSULATING ASCII ART CAPABILITY AS WELL) ????
- * (3) HAVE 2 CONDITIONAL PREPROCESSOR DIRECTIVES FOR MACRO FLAGS THAT CAN BE INCLUDED ABOVE THE LIB TO DISABLE EITHER COLOR OR ASCII ART FUNCTIONALITY 
- *     (THUS CAN ONLY INVOKE 1 SET OF FCNS IF CLIENT DESIRES SUCH)
- *
- * (4) DECLASS.C:
- *     (4.1) SPLICING IN HEADER FILES __AT__ THE EXACT "#include" POSITION SUCH THAN USER CAN DO THINGS LIKE ASSERT WRT DEFINING FLAGS ABOVE THE HEADER 
- *           TO DICTATE ITS OPERATION ?????????
- *     (4.2) (ALSO FOR COLA.C && JCRLIB.C ????) CHANGING THE BODY OF "NO OVERLAP" TO "return strrchr(str, c) == NULL;"
- */
-
-/* 
-
- *support \n, \t, \b, SPACES, & ANSI ESC CODES !!!! (from '\033' till 'm') !!!
-
- //^\\  ||^\\  //===) ||^\\  /|==\ /===\ //===\ || || ==== (====) ||// /|    
-|/===\| ||-//_ ||     ||  )) ||=   |==   || ==\ |===|  ||  _ ||   |((  ||    
-||   || ||__// \\===) ||_//  \|==/ ||    \\==// || || ==== \\//   ||\\ \===/ 
-
-/\\  //\ /\\ || //==\\ /|==\\ //==\\ ||^\\  //==) ==== /| |\ /|  |\ /| /\ |\ \\ // (\  /) /===)  
-||\\//|| ||\\|| ||  || ||==// || _|| ||_//  \==\   ||  || || \\  // \\//\\//  )X(   \\//    //   
-|| \/ || || \// \\==// ||     \\==\\ || \\ \==//   ||  \\=//  \\//   \/  \/  // \\   ||    (===/ 
-
-//^\\   //                    )) \\ //\\    ||     // \\  |=] [=| (( )) ||   // \\                    
-  _//  //      +===+       _             [==||==] ||   || |     | << >> ||  //   \\  [======] <*> <*>  
-  @   <*>  <*>       +===+ ))               ||     \\ //  |=] [=| (( )) || //     \\ [======] <*>  ))  
-
-@ // _||_||_ //=||==\ ((^))    \\|//              (/(/  //==\\ 
- //  _||_||_ \\=||=\\ //^\\// <==*==> //\// // \\      ((  _|| 
-// @  || ||  \==||=// \\_//\\  //|\\        \\ //       \\(_|| 
-
-//=\\ //|  (==\\  /==\\  //||   /|===) //==) (====) ((^)) //==|\
-| + |  ||   __//    =|| ((=||)  \|==\  ||/=\    //  //^\\ \\==||
-\\=// ==== (====/ \==//    ||  \====/  \\==/   //   \\_//     \| 
-
-*/
-
-/******************************************************************************
 * PRIVATE INTERFACES: ASCII ART PRINTING HELPER FUNCTIONS
 ******************************************************************************/
 
