@@ -18,8 +18,9 @@ int main() {
   // "rprintf" = "printf" but 'r'esets fonts automatically at the end!
   rprintf("%sHello Again!", bold blue); 
   
-  // "printf" but outputting the the string using ASCII art for its characters
-  printa("Good%s!", "bye");
+  // "printf" but outputting the the string using ASCII art for its characters (in red font)
+  // NOTE: ASCII art printing fcns implicitly invoke "reset" at the end
+  printa("%sGood%s!", red6, "bye");
   
   return 0;
 }
