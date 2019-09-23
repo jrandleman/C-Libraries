@@ -15,6 +15,15 @@
 #include <string.h>
 
 /******************************************************************************
+* C++ std::endl ALTERNATIVE: "reset" + "\n"
+******************************************************************************/
+
+#ifdef __cplusplus
+// color::rendl = std::endl + resets ANSI Esc Keys/Colors
+namespace color { const char* rendl = "\033[0m\n"; }
+#endif
+
+/******************************************************************************
 * OUTPUT + RESET SYNTAX
 ******************************************************************************/
 
@@ -294,6 +303,49 @@ void showColors() {
 }
 
 /******************************************************************************
+* ASCII CHARS IN ASCII ART
+******************************************************************************/
+
+/*
+ * TODO:
+ * (1) ASCII ART ALPHABET VARIANT USING REVERSE-COLORED WHITESPACES
+ * (2) RENAME LIBRARY FROM COLOR.H TO BE MORE BROAD (ENCAPSULATING ASCII ART CAPABILITY AS WELL) ????
+ * (3) HAVE 2 CONDITIONAL PREPROCESSOR DIRECTIVES FOR MACRO FLAGS THAT CAN BE INCLUDED ABOVE THE LIB TO DISABLE EITHER COLOR OR ASCII ART FUNCTIONALITY 
+ *     (THUS CAN ONLY INVOKE 1 SET OF FCNS IF CLIENT DESIRES SUCH)
+ *
+ * (4) DECLASS.C:
+ *     (4.1) SPLICING IN HEADER FILES __AT__ THE EXACT "#include" POSITION SUCH THAN USER CAN DO THINGS LIKE ASSERT WRT DEFINING FLAGS ABOVE THE HEADER 
+ *           TO DICTATE ITS OPERATION ?????????
+ *     (4.2) (ALSO FOR COLA.C && JCRLIB.C ????) CHANGING THE BODY OF "NO OVERLAP" TO "return strrchr(str, c) == NULL;"
+ */
+
+/* 
+
+ *support \n, \t, \b, SPACES, & ANSI ESC CODES !!!! (from '\033' till 'm') !!!
+
+ //^\\  ||^\\  //===) ||^\\  /|==\ /===\ //===\ || || ==== (====) ||// /|    
+|/===\| ||-//_ ||     ||  )) ||=   |==   || ==\ |===|  ||  _ ||   |((  ||    
+||   || ||__// \\===) ||_//  \|==/ ||    \\==// || || ==== \\//   ||\\ \===/ 
+
+/\\  //\ /\\ || //==\\ /|==\\ //==\\ ||^\\  //==) ==== /| |\ /|  |\ /| /\ |\ \\ // (\  /) /===)  
+||\\//|| ||\\|| ||  || ||==// || _|| ||_//  \==\   ||  || || \\  // \\//\\//  )X(   \\//    //   
+|| \/ || || \// \\==// ||     \\==\\ || \\ \==//   ||  \\=//  \\//   \/  \/  // \\   ||    (===/ 
+
+//^\\   //                    )) \\ //\\    ||     // \\  |=] [=| (( )) ||   // \\                    
+  _//  //      +===+       _             [==||==] ||   || |     | << >> ||  //   \\  [======] <*> <*>  
+  @   <*>  <*>       +===+ ))               ||     \\ //  |=] [=| (( )) || //     \\ [======] <*>  ))  
+
+@ // _||_||_ //=||==\ ((^))    \\|//              (/(/  //==\\ 
+ //  _||_||_ \\=||=\\ //^\\// <==*==> //\// // \\      ((  _|| 
+// @  || ||  \==||=// \\_//\\  //|\\        \\ //       \\(_|| 
+
+//=\\ //|  (==\\  /==\\  //||   /|===) //==) (====) ((^)) //==|\
+| + |  ||   __//    =|| ((=||)  \|==\  ||/=\    //  //^\\ \\==||
+\\=// ==== (====/ \==//    ||  \====/  \\==/   //   \\_//     \| 
+
+*/
+
+/******************************************************************************
 * PRIVATE INTERFACES: ASCII ART PRINTING HELPER FUNCTIONS
 ******************************************************************************/
 
@@ -528,58 +580,4 @@ void showAlphabet() {
   }
 }
 
-/******************************************************************************
-* C++ std::endl & std::cout ALTERNATIVES: "reset" + "\n" & outputting ASCII Art
-******************************************************************************/
-
-#ifdef __cplusplus
-#include <string>
-#include <ostream>
-namespace color { 
-  class ostream_ASCII_Art {
-  private:
-    // output a std::string
-    friend ostream_ASCII_Art &operator<<(ostream_ASCII_Art &ac, std::string str) {
-      char buff[MAX_ASCII_ART_BUFFER_LENGTH];
-      FLOOD_ZEROS(buff, MAX_ASCII_ART_BUFFER_LENGTH);
-      sprinta(buff, "%s", str.c_str());
-      std::cout << buff;
-      return ac;
-    }
-    // output a C-style string
-    friend ostream_ASCII_Art &operator<<(ostream_ASCII_Art &ac, char *str) {
-      char buff[MAX_ASCII_ART_BUFFER_LENGTH];
-      FLOOD_ZEROS(buff, MAX_ASCII_ART_BUFFER_LENGTH);
-      sprinta(buff, "%s", str);
-      std::cout << buff;
-      return ac;
-    }
-    // output a single character
-    friend ostream_ASCII_Art &operator<<(ostream_ASCII_Art &ac, char c) {
-      char buff[MAX_ASCII_ART_BUFFER_LENGTH];
-      FLOOD_ZEROS(buff, MAX_ASCII_ART_BUFFER_LENGTH);
-      sprinta(buff, "%c", c);
-      std::cout << buff;
-      return ac;
-    }
-    // output std::endl
-    friend ostream_ASCII_Art &operator<<(ostream_ASCII_Art &ac, std::ostream&(*newline)(std::ostream&)) {
-      char buff[MAX_ASCII_ART_BUFFER_LENGTH];
-      FLOOD_ZEROS(buff, MAX_ASCII_ART_BUFFER_LENGTH);
-      sprinta(buff, "%c", '\n');
-      std::cout << buff;
-      return ac;
-    }
-  };
-
-  // NOTE: since ASCII Art deals with matrices, sequential invocations of
-  //       the overloaded '<<' operator have an implicit '\n' between them
-  //       => I.E.:        color::acout << "hello" << "there" 
-  //          O/P'S AS IF: color::acout << "hello\n" << "there" 
-
-  ostream_ASCII_Art acout;         // color::aout = std::cout, but outputting ASCII art
-  const char* rendl = "\033[0m\n"; // color::rendl = std::endl + resets ANSI Esc Keys/Colors
-}
-#endif // endif C++
-
-#endif // endif color.h not already #include'd
+#endif
