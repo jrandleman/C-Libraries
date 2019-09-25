@@ -15,7 +15,7 @@
 #include <string.h>
 
 /******************************************************************************
-* C++ std::endl ALTERNATIVE: "reset" + "\n"
+* PUBLIC INTERFACES: C++ std::endl ALTERNATIVE: "reset" + "\n"
 ******************************************************************************/
 
 #ifdef __cplusplus
@@ -24,7 +24,7 @@ namespace color { const char* rendl = "\033[0m\n"; }
 #endif
 
 /******************************************************************************
-* OUTPUT + RESET SYNTAX
+* PUBLIC INTERFACES: OUTPUT + RESET SYNTAX
 ******************************************************************************/
 
 // output macros automatically 'r'esetting SYNTAX after output
@@ -36,7 +36,7 @@ namespace color { const char* rendl = "\033[0m\n"; }
 })
 
 /******************************************************************************
-* KEYPAD ARROW MOVEMENTS
+* PUBLIC INTERFACES: KEYPAD ARROW MOVEMENTS
 ******************************************************************************/
 
 // move the cursor up, down, left, & right "MOVE_AMOUNT" positions
@@ -46,7 +46,7 @@ namespace color { const char* rendl = "\033[0m\n"; }
 #define keyleft(MOVE_AMOUNT)  "\033[" #MOVE_AMOUNT "D"
 
 /******************************************************************************
-* RESET SYNTAX / CLEAR SCREEN
+* PUBLIC INTERFACES: RESET SYNTAX / CLEAR SCREEN
 ******************************************************************************/
 
 // reset syntax settings
@@ -56,7 +56,7 @@ namespace color { const char* rendl = "\033[0m\n"; }
 #define clear "\033[2J"
 
 /******************************************************************************
-* TEXT DECORATION - BOLD, UNDERLINE, REVERSE BACKGROUND/TEXT COLORS
+* PUBLIC INTERFACES: TEXT DECORATION - BOLD, UNDERLINE, REVERSE BACKGROUND/TEXT COLORS
 ******************************************************************************/
 
 // bold, underline, & reverse background/text colors
@@ -70,7 +70,7 @@ namespace color { const char* rendl = "\033[0m\n"; }
 #define boldlinerev bold line rev
 
 /******************************************************************************
-* TEXT COLORS
+* PUBLIC INTERFACES: TEXT COLORS
 ******************************************************************************/
 
 // basic 8 colors, standard amongst even basic terminals:
@@ -158,7 +158,7 @@ namespace color { const char* rendl = "\033[0m\n"; }
 #define white8 "\033[38;5;231m"
 
 /******************************************************************************
-* BACKGROUND COLORS - PREFIXED BY "b"
+* PUBLIC INTERFACES: BACKGROUND COLORS - PREFIXED BY "b"
 ******************************************************************************/
 
 // basic 8 colors, standard amongst even basic terminals:
@@ -246,7 +246,7 @@ namespace color { const char* rendl = "\033[0m\n"; }
 #define bwhite8 "\033[48;5;231m"
 
 /******************************************************************************
-* SHOW AVAILABLE COLORS FUNCTION
+* PUBLIC INTERFACE: SHOW AVAILABLE COLORS FUNCTION
 ******************************************************************************/
 
 void showColors() {
@@ -303,19 +303,21 @@ void showColors() {
 }
 
 /******************************************************************************
-* PRIVATE INTERFACES: ASCII ART PRINTING HELPER FUNCTIONS
+* PRIVATE INTERFACES: ASCII/WHITESPACE ART PRINTING HELPER FUNCTIONS
 ******************************************************************************/
 
-// max strlen, ASCII art alphabet length, # rows per ASCII art letter, '\b' ASCII art idx
-static const int MAX_ASCII_ART_BUFFER_LENGTH = 1000001, // gigabyte + '\0'
-                 ASCII_ART_ALPHABET_LENGTH   = 74,
+// max strlen, ASCII/Whitespace art alphabet length, # rows per alpha art letter, 
+// '\b' alpha art idx
+static const int MAX_ALPHA_ART_BUFFER_LENGTH = 100001, // 100 Kilobytes + '\0'
+                 MAX_ANSI_CMD_LENGTH         = 500,
+                 ALPHA_ART_ALPHABET_LENGTH   = 74,
                  TOTAL_ASCII_ART_ROWS        = 3,       // top mid, bot
-                 BACKSPACE_ART_IDX           = ASCII_ART_ALPHABET_LENGTH - 2,
-                 ANSI_ESC_ART_IDX            = ASCII_ART_ALPHABET_LENGTH - 1;
+                 BACKSPACE_ART_IDX           = ALPHA_ART_ALPHABET_LENGTH - 2,
+                 ANSI_ESC_ART_IDX            = ALPHA_ART_ALPHABET_LENGTH - 1;
 
 
 // chars w/ ASCII art equivalents (lowercase letters too, but get uppercased)
-static const char *VALID_ASCII_ART_CHARS     = 
+static const char *VALID_ALPHA_ART_CHARS     = 
 "\t\n !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`{|}~\b";
 
 
@@ -323,19 +325,27 @@ static const char *VALID_ASCII_ART_CHARS     =
 // => '\b' char repn is missing as the # of '\b's used is evaluated at run-time
 //    as per width of the previously printed char. 
 // => each row's last string repns non-lowercase chars also not found in 
-//    "VALID_ASCII_ART_CHARS"
-static const char *ASCII_ART_ROW_TOP[ASCII_ART_ALPHABET_LENGTH] = {"\t\t", "newline",  "      ", "  // ", "(/(/ ", "_||_||_ ", "//=||==\\ ",    "@ // ", "((^))   ",     ")) ", " // ",   "\\\\  ", " \\\\|//  ", "   ||    ", "   ", "      ", "    ", "  // ", "//=\\\\ ", "//|  ", "(==\\\\  ", "/==\\\\ ", " //||  ", " /|===) ",   "//==) ",   "(====) ", "((^)) ",   "//==|\\ ",  "    ", "    ", "   ",   "        ", "   ",   "//^\\\\ ", " //==\\\\ ", " //^\\\\  ", "||^\\\\  ", "//===) ",   "||^\\\\  ", "/|==\\ ", "/===\\ ", "//===\\ ",  "|| || ", "==== ", "(====) ",   "||// ",   "/|    ",  "/\\\\  //\\ ", "/\\\\ || ", "//==\\\\ ", "/|==\\\\ ", "//==\\\\ ",   "||^\\\\ ", " //==) ",   "==== ", "/| |\\ ",  "/|  |\\ ",  "/| /\\ |\\ ",   "\\\\ // ", "(\\  /) ",  "/===)  ", "|=] ", "\\\\   ", "[=| ", "//^\\\\ ", "      ", "\\\\ ", "(( ", "|| ", ")) ", "      ",  "###### "};
-static const char *ASCII_ART_ROW_MID[ASCII_ART_ALPHABET_LENGTH] = {"\t\t", "newline",  "      ", " //  ", "     ", "_||_||_ ", "\\\\=||=\\\\ ", " //  ", "//^\\\\// ",   "   ", "||  ",   " || ",   "<==*==> ",   "[==++==] ", "_  ", "+===+ ", "    ", " //  ", "| + | ",   " ||  ", " __//  ",   "  =|| ",   "((=||) ", " \\|==\\  ", "||/=\\ ",  "   //  ", "//^\\\\ ", "\\\\==|| ", "<*> ", "<*> ", "// ",   "[=====] ", "\\\\ ", "  _// ",   "((  _|| ",   "|/===\\| ",  "||-//_ ",   "||     ",   "||  )) ",   "||=   ",  "|==   ",  "|| ==\\ ",  "|===| ", " ||  ", "_ ||   ",   "|((  ",   "||    ",  "||\\\\//|| ",  "||\\\\|| ", "||  || ",   "||==// ",   "|| _|| ",     "||_// ",   " \\==\\  ", " ||  ", "|| || ",   "\\\\  // ", "\\\\//\\\\// ", " )X(  ",   " \\\\//  ", "  //   ", "|   ", " \\\\  ", "  | ", "      ",   "      ", "   ",   "<< ", "|| ", ">> ", "//\\// ", "###### "};
-static const char *ASCII_ART_ROW_BOT[ASCII_ART_ALPHABET_LENGTH] = {"\t\t", "newline",  "      ", "<*>  ", "     ", " || ||  ", "\\==||=// ",    "// @ ", "\\\\_//\\\\ ", "   ", " \\\\ ", "//  ",   " //|\\\\  ", "   ||    ", ")) ", "      ", "<*> ", "//   ", "\\\\=// ", "==== ", "(====/ ",   "\\==// ",  "   ||  ", "\\====/  ",  "\\\\==/ ", "  //   ", "\\\\_// ", "    \\| ",  "<*> ", " )) ", "\\\\ ", "[=====] ", "// ",   "  @   ",   " \\\\(_|| ", "||   || ",   "||__// ",   "\\\\===) ", "||_//  ",   "\\|==/ ", "||    ",  "\\\\==// ", "|| || ", "==== ", "\\\\//   ", "||\\\\ ", "\\===/ ", "|| \\/ || ",   "|| \\// ",  "\\\\==// ", "||     ",   "\\\\==\\\\ ", "|| \\\\ ", "\\==//  ",  " ||  ", "\\\\=// ", " \\\\//  ", " \\/  \\/  ",   "// \\\\ ", "  ||   ",   " (===/ ", "|=] ", "  \\\\ ", "[=| ", "      ",   "+===+ ", "   ",   "(( ", "|| ", ")) ", "      ",  "###### "};
-static const char **ASCII_ART_MATIRIX[TOTAL_ASCII_ART_ROWS] = {
+//    "VALID_ALPHA_ART_CHARS"
+static const char *ASCII_ART_ROW_TOP[ALPHA_ART_ALPHABET_LENGTH] = {"\t\t", "newline",  "      ", "  // ", "(/(/ ", "_||_||_ ", "//=||==\\ ",    "@ // ", "((^))   ",     ")) ", " // ",   "\\\\  ", " \\\\|//  ", "   ||    ", "   ", "      ", "    ", "  // ", "//=\\\\ ", "//|  ", "(==\\\\  ", "/==\\\\ ", " //||  ", " /|===) ",   "//==) ",   "(====) ", "((^)) ",   "//==|\\ ",  "    ", "    ", "   ",   "        ", "   ",   "//^\\\\ ", " //==\\\\ ", " //^\\\\  ", "||^\\\\  ", "//===) ",   "||^\\\\  ", "/|==\\ ", "/===\\ ", "//===\\ ",  "|| || ", "==== ", "(====) ",   "||// ",   "/|    ",  "/\\\\  //\\ ", "/\\\\ || ", "//==\\\\ ", "/|==\\\\ ", "//==\\\\ ",   "||^\\\\ ", " //==) ",   "==== ", "/| |\\ ",  "/|  |\\ ",  "/| /\\ |\\ ",   "\\\\ // ", "(\\  /) ",  "/===)  ", "|=] ", "\\\\   ", "[=| ", "//^\\\\ ", "      ", "\\\\ ", "(( ", "|| ", ")) ", "      ",  "###### "};
+static const char *ASCII_ART_ROW_MID[ALPHA_ART_ALPHABET_LENGTH] = {"\t\t", "newline",  "      ", " //  ", "     ", "_||_||_ ", "\\\\=||=\\\\ ", " //  ", "//^\\\\// ",   "   ", "||  ",   " || ",   "<==*==> ",   "[==++==] ", "_  ", "+===+ ", "    ", " //  ", "| + | ",   " ||  ", " __//  ",   "  =|| ",   "((=||) ", " \\|==\\  ", "||/=\\ ",  "   //  ", "//^\\\\ ", "\\\\==|| ", "<*> ", "<*> ", "// ",   "[=====] ", "\\\\ ", "  _// ",   "((  _|| ",   "|/===\\| ",  "||-//_ ",   "||     ",   "||  )) ",   "||=   ",  "|==   ",  "|| ==\\ ",  "|===| ", " ||  ", "_ ||   ",   "|((  ",   "||    ",  "||\\\\//|| ",  "||\\\\|| ", "||  || ",   "||==// ",   "|| _|| ",     "||_// ",   " \\==\\  ", " ||  ", "|| || ",   "\\\\  // ", "\\\\//\\\\// ", " )X(  ",   " \\\\//  ", "  //   ", "|   ", " \\\\  ", "  | ", "      ",   "      ", "   ",   "<< ", "|| ", ">> ", "//\\// ", "###### "};
+static const char *ASCII_ART_ROW_BOT[ALPHA_ART_ALPHABET_LENGTH] = {"\t\t", "newline",  "      ", "<*>  ", "     ", " || ||  ", "\\==||=// ",    "// @ ", "\\\\_//\\\\ ", "   ", " \\\\ ", "//  ",   " //|\\\\  ", "   ||    ", ")) ", "      ", "<*> ", "//   ", "\\\\=// ", "==== ", "(====/ ",   "\\==// ",  "   ||  ", "\\====/  ",  "\\\\==/ ", "  //   ", "\\\\_// ", "    \\| ",  "<*> ", " )) ", "\\\\ ", "[=====] ", "// ",   "  @   ",   " \\\\(_|| ", "||   || ",   "||__// ",   "\\\\===) ", "||_//  ",   "\\|==/ ", "||    ",  "\\\\==// ", "|| || ", "==== ", "\\\\//   ", "||\\\\ ", "\\===/ ", "|| \\/ || ",   "|| \\// ",  "\\\\==// ", "||     ",   "\\\\==\\\\ ", "|| \\\\ ", "\\==//  ",  " ||  ", "\\\\=// ", " \\\\//  ", " \\/  \\/  ",   "// \\\\ ", "  ||   ",   " (===/ ", "|=] ", "  \\\\ ", "[=| ", "      ",   "+===+ ", "   ",   "(( ", "|| ", ")) ", "      ",  "###### "};
+static const char **ASCII_ART_MATRIX[TOTAL_ASCII_ART_ROWS] = {
   ASCII_ART_ROW_TOP, ASCII_ART_ROW_MID, ASCII_ART_ROW_BOT
 };
 
 
-// Idxs of ANSI Esc key instances (ie from using the colors/text-deco above) 
-// in the client's non-art string
-static int ANSI_ESC_IDXS[ASCII_ART_ALPHABET_LENGTH],
-           TOTAL_ANSI_ESC_SEQUENCES = 0;
+// rows in WHITESPACE alphabet art matrix
+static const int TOTAL_WHITESPACE_ART_ROWS = 5,
+                 MAX_WHITESPACE_REVS_PER_LETTER = 4; // number of "%s" w/in each letter to splice in user-defined ANSI cmds
+// WHITESPACE art alphabet sorted by ascii code
+static const char *WHITESPACE_ART_ROW_CEIL[ALPHA_ART_ALPHABET_LENGTH]  = {"%s%s%s%s\t\t\t", "%s%s%s%snewline", "%s%s%s%s      ", "%s%s%s\033[7m     \033[0m%s ", "%s%s\033[7m  \033[0m%s \033[7m  \033[0m%s ", "%s%s   \033[7m \033[0m%s   \033[7m \033[0m%s    ", "%s%s%s  \033[7m       \033[0m%s ", "%s%s\033[7m  \033[0m%s  \033[7m  \033[0m%s ", "%s%s%s \033[7m    \033[0m%s     ", "%s%s%s\033[7m  \033[0m%s ", "%s%s%s  \033[7m  \033[0m%s ", "%s%s%s\033[7m  \033[0m%s   ", "%s\033[7m  \033[0m%s \033[7m \033[0m%s \033[7m  \033[0m%s ", "%s%s%s    \033[7m \033[0m%s     ", "%s%s%s%s   ", "%s%s%s%s      ", "%s%s%s%s    ", "%s%s%s    \033[7m  \033[0m%s ", "%s%s%s \033[7m     \033[0m%s  ", "%s%s%s \033[7m   \033[0m%s    ", "%s%s%s \033[7m    \033[0m%s    ", "%s%s%s\033[7m      \033[0m%s ", "%s%s\033[7m  \033[0m%s \033[7m  \033[0m%s ", "%s%s%s\033[7m      \033[0m%s ", "%s%s%s \033[7m      \033[0m%s  ", "%s%s%s\033[7m        \033[0m%s ", "%s%s%s \033[7m    \033[0m%s  ", "%s%s%s \033[7m    \033[0m%s  ", "%s%s%s%s   ", "%s%s%s%s   ", "%s%s%s%s    ", "%s%s%s%s       ", "%s%s%s%s    ", "%s%s%s \033[7m     \033[0m%s  ", "%s%s%s \033[7m     \033[0m%s  ", "%s%s%s \033[7m   \033[0m%s  ", "%s%s%s\033[7m    \033[0m%s  ", "%s%s%s \033[7m    \033[0m%s  ", "%s%s%s\033[7m   \033[0m%s   ", "%s%s%s \033[7m    \033[0m%s  ", "%s%s%s \033[7m     \033[0m%s ", "%s%s%s \033[7m    \033[0m%s   ", "%s%s\033[7m  \033[0m%s \033[7m  \033[0m%s ", "%s%s%s\033[7m   \033[0m%s ", "%s%s%s\033[7m       \033[0m%s ", "%s%s\033[7m  \033[0m%s  \033[7m  \033[0m%s  ", "%s%s%s\033[7m  \033[0m%s    ", "%s%s\033[7m   \033[0m%s   \033[7m   \033[0m%s ", "%s%s \033[7m  \033[0m%s   \033[7m   \033[0m%s ", "%s%s%s \033[7m   \033[0m%s  ", "%s%s%s\033[7m    \033[0m%s ", "%s%s%s \033[7m   \033[0m%s   ", "%s%s%s\033[7m    \033[0m%s   ", "%s%s%s   \033[7m    \033[0m%s  ", "%s%s%s\033[7m     \033[0m%s ", "%s%s\033[7m  \033[0m%s \033[7m  \033[0m%s ", "%s%s\033[7m    \033[0m%s \033[7m    \033[0m%s ", "%s%s\033[7m    \033[0m%s     \033[7m    \033[0m%s ", "%s%s\033[7m   \033[0m%s   \033[7m   \033[0m%s ", "%s%s\033[7m  \033[0m%s   \033[7m  \033[0m%s ", "%s%s%s\033[7m      \033[0m%s  ", "%s%s%s\033[7m    \033[0m%s ", "%s%s%s\033[7m  \033[0m%s     ", "%s%s%s\033[7m    \033[0m%s ", "%s%s%s \033[7m   \033[0m%s  ", "%s%s%s%s       ", "%s%s%s\033[7m  \033[0m%s  ", "%s%s%s\033[7m  \033[0m%s ", "%s%s%s\033[7m  \033[0m%s ", "%s%s%s\033[7m  \033[0m%s ", "%s%s%s%s        ", "%s%s%s\033[7m      \033[0m%s "};
+static const char *WHITESPACE_ART_ROW_TOP[ALPHA_ART_ALPHABET_LENGTH]   = {"%s%s%s%s\t\t\t", "%s%s%s%snewline", "%s%s%s%s      ", "%s%s%s \033[7m   \033[0m%s  ", "%s%s\033[7m \033[0m%s  \033[7m \033[0m%s  ", "%s%s%s\033[7m           \033[0m%s ", "%s \033[7m  \033[0m%s \033[7m \033[0m%s   \033[7m \033[0m%s ", "%s%s%s   \033[7m  \033[0m%s  ", "%s%s\033[7m  \033[0m%s  \033[7m  \033[0m%s    ", "%s%s%s \033[7m \033[0m%s ", "%s%s%s \033[7m  \033[0m%s  ", "%s%s%s \033[7m  \033[0m%s  ", "%s%s%s \033[7m     \033[0m%s  ", "%s%s%s    \033[7m \033[0m%s     ", "%s%s%s%s   ", "%s%s%s%s      ", "%s%s%s%s    ", "%s%s%s   \033[7m  \033[0m%s  ", "%s%s\033[7m  \033[0m%s   \033[7m  \033[0m%s ", "%s%s\033[7m  \033[0m%s \033[7m \033[0m%s    ", "%s%s\033[7m  \033[0m%s  \033[7m  \033[0m%s   ", "%s%s\033[7m \033[0m%s  \033[7m  \033[0m%s  ", "%s%s\033[7m \033[0m%s  \033[7m \033[0m%s  ", "%s%s%s\033[7m \033[0m%s      ", "%s%s\033[7m  \033[0m%s    \033[7m  \033[0m%s ", "%s%s\033[7m  \033[0m%s   \033[7m  \033[0m%s  ", "%s%s\033[7m  \033[0m%s  \033[7m  \033[0m%s ", "%s%s\033[7m  \033[0m%s  \033[7m  \033[0m%s ", "%s%s%s\033[7m  \033[0m%s ", "%s%s%s\033[7m  \033[0m%s ", "%s%s%s \033[7m  \033[0m%s ", "%s%s%s\033[7m      \033[0m%s ", "%s%s%s\033[7m  \033[0m%s  ", "%s%s\033[7m  \033[0m%s   \033[7m  \033[0m%s ", "%s%s\033[7m  \033[0m%s   \033[7m  \033[0m%s ", "%s%s \033[7m \033[0m%s \033[7m \033[0m%s  ", "%s%s \033[7m \033[0m%s \033[7m \033[0m%s  ", "%s%s\033[7m  \033[0m%s  \033[7m  \033[0m%s ", "%s%s\033[7m \033[0m%s \033[7m  \033[0m%s  ", "%s%s\033[7m  \033[0m%s  \033[7m  \033[0m%s ", "%s%s \033[7m \033[0m%s   \033[7m \033[0m%s ", "%s%s%s\033[7m  \033[0m%s      ", "%s%s \033[7m \033[0m%s \033[7m \033[0m%s  ", "%s%s%s \033[7m \033[0m%s  ", "%s%s   \033[7m \033[0m%s  \033[7m \033[0m%s ", "%s%s \033[7m \033[0m%s \033[7m  \033[0m%s   ", "%s%s%s \033[7m \033[0m%s    ", "%s%s \033[7m   \033[0m%s \033[7m   \033[0m%s  ", "%s%s \033[7m   \033[0m%s  \033[7m \033[0m%s   ", "%s%s\033[7m  \033[0m%s \033[7m  \033[0m%s ", "%s%s \033[7m \033[0m%s \033[7m \033[0m%s ", "%s%s\033[7m  \033[0m%s \033[7m  \033[0m%s  ", "%s%s \033[7m \033[0m%s \033[7m  \033[0m%s  ", "%s%s  \033[7m  \033[0m%s  \033[7m  \033[0m%s ", "%s\033[7m \033[0m%s \033[7m \033[0m%s \033[7m \033[0m%s ", "%s%s \033[7m \033[0m%s \033[7m \033[0m%s  ", "%s%s \033[7m  \033[0m%s   \033[7m  \033[0m%s  ", "%s \033[7m  \033[0m%s   \033[7m \033[0m%s   \033[7m  \033[0m%s  ", "%s%s  \033[7m  \033[0m%s \033[7m  \033[0m%s   ", "%s%s \033[7m  \033[0m%s \033[7m  \033[0m%s  ", "%s%s\033[7m \033[0m%s  \033[7m  \033[0m%s   ", "%s%s%s\033[7m  \033[0m%s   ", "%s%s%s \033[7m  \033[0m%s    ", "%s%s%s  \033[7m  \033[0m%s ", "%s%s\033[7m  \033[0m%s \033[7m  \033[0m%s ", "%s%s%s%s       ", "%s%s%s \033[7m  \033[0m%s ", "%s%s%s \033[7m \033[0m%s ", "%s%s%s\033[7m  \033[0m%s ", "%s%s%s\033[7m \033[0m%s  ", "%s%s \033[7m   \033[0m%s \033[7m  \033[0m%s ", "%s%s%s\033[7m      \033[0m%s "};
+static const char *WHITESPACE_ART_ROW_MID[ALPHA_ART_ALPHABET_LENGTH]   = {"%s%s%s%s\t\t\t", "%s%s%s%snewline", "%s%s%s%s      ", "%s%s%s  \033[7m \033[0m%s   ", "%s%s%s%s      ", "%s%s   \033[7m \033[0m%s   \033[7m \033[0m%s    ", "%s%s%s  \033[7m     \033[0m%s   ", "%s%s%s  \033[7m  \033[0m%s   ", "%s%s \033[7m     \033[0m%s \033[7m  \033[0m%s ", "%s%s%s%s   ", "%s%s%s\033[7m  \033[0m%s   ", "%s%s%s  \033[7m  \033[0m%s ", "%s%s%s\033[7m       \033[0m%s ", "%s%s%s\033[7m         \033[0m%s ", "%s%s%s%s   ", "%s%s%s\033[7m     \033[0m%s ", "%s%s%s%s    ", "%s%s%s  \033[7m  \033[0m%s   ", "%s\033[7m \033[0m%s  \033[7m \033[0m%s  \033[7m \033[0m%s ", "%s%s%s   \033[7m \033[0m%s    ", "%s%s%s   \033[7m  \033[0m%s    ", "%s%s%s  \033[7m  \033[0m%s   ", "%s%s%s\033[7m     \033[0m%s ", "%s%s%s\033[7m    \033[0m%s   ", "%s%s%s\033[7m     \033[0m%s    ", "%s%s%s    \033[7m  \033[0m%s   ", "%s%s%s \033[7m    \033[0m%s  ", "%s%s%s \033[7m    \033[0m%s  ", "%s%s%s%s   ", "%s%s%s%s   ", "%s%s%s\033[7m  \033[0m%s  ", "%s%s%s%s       ", "%s%s%s \033[7m  \033[0m%s ", "%s%s%s    \033[7m  \033[0m%s  ", "%s%s\033[7m \033[0m%s  \033[7m    \033[0m%s ", "%s%s%s \033[7m   \033[0m%s  ", "%s%s%s \033[7m    \033[0m%s ", "%s%s%s\033[7m  \033[0m%s     ", "%s%s\033[7m \033[0m%s  \033[7m  \033[0m%s ", "%s%s%s\033[7m   \033[0m%s    ", "%s%s%s \033[7m   \033[0m%s   ", "%s%s\033[7m  \033[0m%s \033[7m    \033[0m%s ", "%s%s%s \033[7m   \033[0m%s  ", "%s%s%s \033[7m \033[0m%s  ", "%s%s\033[7m  \033[0m%s \033[7m \033[0m%s    ", "%s%s%s \033[7m   \033[0m%s    ", "%s%s%s \033[7m \033[0m%s    ", "%s \033[7m \033[0m%s \033[7m   \033[0m%s \033[7m \033[0m%s  ", "%s \033[7m \033[0m%s \033[7m  \033[0m%s \033[7m \033[0m%s   ", "%s%s\033[7m \033[0m%s   \033[7m \033[0m%s ", "%s%s%s \033[7m   \033[0m%s ", "%s%s\033[7m \033[0m%s   \033[7m \033[0m%s  ", "%s%s%s \033[7m   \033[0m%s   ", "%s%s%s   \033[7m  \033[0m%s    ", "%s%s%s  \033[7m \033[0m%s   ", "%s%s \033[7m \033[0m%s \033[7m \033[0m%s  ", "%s%s  \033[7m  \033[0m%s \033[7m  \033[0m%s   ", "%s  \033[7m  \033[0m%s \033[7m   \033[0m%s \033[7m  \033[0m%s   ", "%s%s%s   \033[7m   \033[0m%s    ", "%s%s%s  \033[7m   \033[0m%s   ", "%s%s%s  \033[7m  \033[0m%s    ", "%s%s%s\033[7m  \033[0m%s   ", "%s%s%s  \033[7m  \033[0m%s   ", "%s%s%s  \033[7m  \033[0m%s ", "%s%s%s%s      ", "%s%s%s%s       ", "%s%s%s%s    ", "%s%s%s\033[7m  \033[0m%s ", "%s%s%s\033[7m  \033[0m%s ", "%s%s%s\033[7m  \033[0m%s ", "%s%s\033[7m  \033[0m%s \033[7m   \033[0m%s  ", "%s%s%s\033[7m      \033[0m%s "};
+static const char *WHITESPACE_ART_ROW_BOT[ALPHA_ART_ALPHABET_LENGTH]   = {"%s%s%s%s\t\t\t", "%s%s%s%snewline", "%s%s%s%s      ", "%s%s%s%s      ", "%s%s%s%s      ", "%s%s%s\033[7m           \033[0m%s ", "%s\033[7m \033[0m%s   \033[7m \033[0m%s \033[7m  \033[0m%s  ", "%s%s%s \033[7m  \033[0m%s    ", "%s%s\033[7m  \033[0m%s  \033[7m    \033[0m%s  ", "%s%s%s%s   ", "%s%s%s \033[7m  \033[0m%s  ", "%s%s%s \033[7m  \033[0m%s  ", "%s%s%s \033[7m     \033[0m%s  ", "%s%s%s    \033[7m \033[0m%s     ", "%s%s%s \033[7m \033[0m%s ", "%s%s%s%s      ", "%s%s%s%s    ", "%s%s%s \033[7m  \033[0m%s    ", "%s%s\033[7m  \033[0m%s   \033[7m  \033[0m%s ", "%s%s%s   \033[7m \033[0m%s    ", "%s%s  \033[7m  \033[0m%s   \033[7m \033[0m%s ", "%s%s\033[7m \033[0m%s  \033[7m  \033[0m%s  ", "%s%s%s   \033[7m \033[0m%s  ", "%s%s%s   \033[7m  \033[0m%s  ", "%s%s\033[7m  \033[0m%s  \033[7m  \033[0m%s   ", "%s%s%s   \033[7m  \033[0m%s    ", "%s%s\033[7m  \033[0m%s  \033[7m  \033[0m%s ", "%s%s%s    \033[7m \033[0m%s  ", "%s%s%s\033[7m  \033[0m%s ", "%s%s%s \033[7m \033[0m%s ", "%s%s%s \033[7m  \033[0m%s ", "%s%s%s\033[7m      \033[0m%s ", "%s%s%s\033[7m  \033[0m%s  ", "%s%s%s   \033[7m \033[0m%s    ", "%s\033[7m \033[0m%s \033[7m  \033[0m%s  \033[7m \033[0m%s ", "%s%s \033[7m \033[0m%s \033[7m \033[0m%s  ", "%s%s \033[7m \033[0m%s  \033[7m \033[0m%s ", "%s%s\033[7m  \033[0m%s  \033[7m  \033[0m%s ", "%s%s\033[7m \033[0m%s \033[7m  \033[0m%s  ", "%s%s\033[7m  \033[0m%s  \033[7m  \033[0m%s ", "%s%s%s \033[7m \033[0m%s     ", "%s\033[7m  \033[0m%s  \033[7m \033[0m%s \033[7m \033[0m%s ", "%s%s \033[7m \033[0m%s \033[7m \033[0m%s  ", "%s%s%s \033[7m \033[0m%s  ", "%s%s \033[7m \033[0m%s \033[7m \033[0m%s    ", "%s%s \033[7m \033[0m%s \033[7m  \033[0m%s   ", "%s%s \033[7m \033[0m%s \033[7m  \033[0m%s ", "%s \033[7m \033[0m%s  \033[7m \033[0m%s  \033[7m \033[0m%s  ", "%s%s \033[7m \033[0m%s  \033[7m   \033[0m%s   ", "%s%s\033[7m  \033[0m%s \033[7m  \033[0m%s ", "%s%s%s \033[7m \033[0m%s   ", "%s%s\033[7m  \033[0m%s \033[7m   \033[0m%s ", "%s%s \033[7m \033[0m%s \033[7m  \033[0m%s  ", "%s%s\033[7m  \033[0m%s  \033[7m  \033[0m%s   ", "%s%s%s  \033[7m \033[0m%s   ", "%s%s \033[7m \033[0m%s \033[7m \033[0m%s  ", "%s%s%s   \033[7m   \033[0m%s    ", "%s%s   \033[7m   \033[0m%s \033[7m   \033[0m%s    ", "%s%s  \033[7m  \033[0m%s \033[7m  \033[0m%s   ", "%s%s%s   \033[7m \033[0m%s    ", "%s%s \033[7m  \033[0m%s  \033[7m  \033[0m%s ", "%s%s%s\033[7m  \033[0m%s   ", "%s%s%s   \033[7m  \033[0m%s  ", "%s%s%s  \033[7m  \033[0m%s ", "%s%s%s%s      ", "%s%s%s%s       ", "%s%s%s%s    ", "%s%s%s \033[7m \033[0m%s ", "%s%s%s\033[7m  \033[0m%s ", "%s%s%s\033[7m \033[0m%s  ", "%s%s%s%s        ", "%s%s%s\033[7m      \033[0m%s "};
+static const char *WHITESPACE_ART_ROW_FLOOR[ALPHA_ART_ALPHABET_LENGTH] = {"%s%s%s%s\t\t\t", "%s%s%s%snewline", "%s%s%s%s      ", "%s%s%s \033[7m   \033[0m%s  ", "%s%s%s%s      ", "%s%s   \033[7m \033[0m%s   \033[7m \033[0m%s    ", "%s%s%s\033[7m       \033[0m%s   ", "%s%s\033[7m  \033[0m%s  \033[7m  \033[0m%s ", "%s%s \033[7m    \033[0m%s  \033[7m  \033[0m%s ", "%s%s%s%s   ", "%s%s%s  \033[7m  \033[0m%s ", "%s%s%s\033[7m  \033[0m%s   ", "%s\033[7m  \033[0m%s \033[7m \033[0m%s \033[7m  \033[0m%s ", "%s%s%s    \033[7m \033[0m%s     ", "%s%s%s\033[7m  \033[0m%s ", "%s%s%s%s      ", "%s%s%s\033[7m   \033[0m%s ", "%s%s%s\033[7m  \033[0m%s     ", "%s%s%s \033[7m     \033[0m%s  ", "%s%s%s\033[7m       \033[0m%s ", "%s%s%s\033[7m        \033[0m%s ", "%s%s%s\033[7m     \033[0m%s  ", "%s%s%s  \033[7m   \033[0m%s ", "%s%s%s\033[7m    \033[0m%s   ", "%s%s%s\033[7m     \033[0m%s    ", "%s%s%s  \033[7m  \033[0m%s     ", "%s%s%s \033[7m    \033[0m%s  ", "%s%s%s \033[7m    \033[0m%s  ", "%s%s%s%s   ", "%s%s%s\033[7m  \033[0m%s ", "%s%s%s%s    ", "%s%s%s%s       ", "%s%s%s%s    ", "%s%s%s  \033[7m   \033[0m%s   ", "%s%s\033[7m \033[0m%s  \033[7m    \033[0m%s ", "%s%s\033[7m  \033[0m%s \033[7m  \033[0m%s ", "%s%s%s\033[7m     \033[0m%s ", "%s%s%s \033[7m    \033[0m%s  ", "%s%s%s\033[7m   \033[0m%s   ", "%s%s%s \033[7m    \033[0m%s  ", "%s%s%s\033[7m  \033[0m%s     ", "%s%s%s \033[7m    \033[0m%s   ", "%s%s\033[7m  \033[0m%s \033[7m  \033[0m%s ", "%s%s%s\033[7m   \033[0m%s ", "%s%s%s \033[7m   \033[0m%s    ", "%s%s\033[7m  \033[0m%s  \033[7m   \033[0m%s ", "%s%s%s \033[7m   \033[0m%s  ", "%s%s\033[7m  \033[0m%s     \033[7m  \033[0m%s ", "%s%s\033[7m  \033[0m%s   \033[7m  \033[0m%s   ", "%s%s%s \033[7m   \033[0m%s  ", "%s%s%s \033[7m \033[0m%s   ", "%s%s \033[7m   \033[0m%s \033[7m \033[0m%s ", "%s%s \033[7m \033[0m%s  \033[7m  \033[0m%s ", "%s%s%s \033[7m    \033[0m%s    ", "%s%s%s \033[7m   \033[0m%s  ", "%s%s%s \033[7m   \033[0m%s  ", "%s%s%s    \033[7m \033[0m%s     ", "%s%s    \033[7m \033[0m%s   \033[7m \033[0m%s     ", "%s%s\033[7m   \033[0m%s   \033[7m   \033[0m%s ", "%s%s%s  \033[7m   \033[0m%s   ", "%s%s%s\033[7m      \033[0m%s  ", "%s%s%s\033[7m    \033[0m%s ", "%s%s%s    \033[7m  \033[0m%s ", "%s%s%s\033[7m    \033[0m%s ", "%s%s%s%s      ", "%s%s%s\033[7m      \033[0m%s ", "%s%s%s%s    ", "%s%s%s\033[7m  \033[0m%s ", "%s%s%s\033[7m  \033[0m%s ", "%s%s%s\033[7m  \033[0m%s ", "%s%s%s%s        ", "%s%s%s\033[7m      \033[0m%s "};
+static const char **WHITESPACE_ART_MATRIX[TOTAL_WHITESPACE_ART_ROWS]   = {
+  WHITESPACE_ART_ROW_CEIL, WHITESPACE_ART_ROW_TOP, WHITESPACE_ART_ROW_MID, WHITESPACE_ART_ROW_BOT, WHITESPACE_ART_ROW_FLOOR
+};
 
 
 // initialize array with zero's (wipes garbage memory)
@@ -362,20 +372,21 @@ static void mk_string_uppercase(char *p) {
 
 // skips over ANSI Escape sequences (formats terminal output, each start w/ '\033')
 // returns ANSI Escape sequence's length
-static int skip_over_ANSI_Esc_sequence(const char non_art_buffer[], int idx) {
-  ANSI_ESC_IDXS[TOTAL_ANSI_ESC_SEQUENCES++] = idx; // save ANSI esc idx in string
+static int skip_over_ANSI_Esc_sequence(const char non_art_buffer[], int idx, int ANSI_ESC_IDXS[], int *TOTAL_ANSI_ESC_SEQUENCES) {
+  ANSI_ESC_IDXS[*TOTAL_ANSI_ESC_SEQUENCES] = idx; // save ANSI esc idx in string
+  *TOTAL_ANSI_ESC_SEQUENCES += 1;
   while(non_art_buffer[idx] != '\0' && !isalpha(non_art_buffer[idx])) ++idx;
   return idx;
 }
 
 
-// returns hashed idx of ASCII-Art letter position in rows of ASCII_ART_MATIRIX
+// returns hashed idx of Alpha-Art letter position in rows of ASCII_ART_MATRIX/WHITESPACE_ART_MATRIX
 static int ascii_art_idx_hash_function(const char c) {
   // idx of ASCII-art-unknown char repn & total prefixing cntrl chars '\t\n' 
-  const int UNKNOWN_ART_IDX = ASCII_ART_ALPHABET_LENGTH - 3,
+  const int UNKNOWN_ART_IDX = ALPHA_ART_ALPHABET_LENGTH - 3,
             TOTAL_CNTRL_CHARS = 2; // '\t', '\n'
   // check if char has an equivalent repn in the ASCII art alphabet
-  if(strrchr(VALID_ASCII_ART_CHARS, c) == NULL)
+  if(strrchr(VALID_ALPHA_ART_CHARS, c) == NULL)
     return UNKNOWN_ART_IDX;
   // return valid ASCII-Art char's hashed idx 
   if(c == '\b') return BACKSPACE_ART_IDX;
@@ -387,12 +398,12 @@ static int ascii_art_idx_hash_function(const char c) {
 
 // fills "idxs_container[]" with the hashed idx of each char in "output[]"
 // returns length of filled "idxs_container" array
-static int get_hashed_art_idxs(int idxs_container[], const char non_art_buffer[]) {
+static int get_hashed_art_idxs(int idxs_container[], const char non_art_buffer[], int ANSI_ESC_IDXS[], int *TOTAL_ANSI_ESC_SEQUENCES) {
   int idx = 0, i = 0;
   const int non_art_length = strlen(non_art_buffer);
   for(; idx < non_art_length; ++idx) {
     if(non_art_buffer[idx] == '\033') { // skip ANSI esc sequences
-      idx = skip_over_ANSI_Esc_sequence(non_art_buffer, idx);
+      idx = skip_over_ANSI_Esc_sequence(non_art_buffer, idx, ANSI_ESC_IDXS, TOTAL_ANSI_ESC_SEQUENCES);
       idxs_container[i++] = ANSI_ESC_ART_IDX; // store denote idx instance to read from string later on output
       continue;
     }
@@ -402,68 +413,184 @@ static int get_hashed_art_idxs(int idxs_container[], const char non_art_buffer[]
 }
 
 
-// fills "ascii_art_buffer" with "non_art_string"'s chars in ASCII Art
-static void convert_non_art_string_to_ascii_art(char non_art_string[], char ascii_art_buffer[]) {
-  const int NEWLINE_ART_IDX = 1; // idx (hash value) of '\n' ASCII art repn
-
-  // array of hashed letter idxs for ASCII-art variant's row positions
-  int ascii_art_letter_idxs[MAX_ASCII_ART_BUFFER_LENGTH];
-  FLOOD_ZEROS(ascii_art_letter_idxs, MAX_ASCII_ART_BUFFER_LENGTH);
-
-  // convert lowercase letters to uppercase, non_art_buffer holds 
-  // uppercased/formatted "non_art_string" & "ascii_art_buffer" holds ascii art
-  char non_art_buffer[MAX_ASCII_ART_BUFFER_LENGTH], *p = ascii_art_buffer, *ansi_ptr;
-  FLOOD_ZEROS(non_art_buffer, MAX_ASCII_ART_BUFFER_LENGTH); 
-  strcpy(non_art_buffer, non_art_string), mk_string_uppercase(non_art_buffer);
-
-  // get hashed idxs of letter ASCII-art variant positions in the "ASCII_ART_MATIRIX"
-  const int total_idxs = get_hashed_art_idxs(ascii_art_letter_idxs, non_art_buffer);
-
-  // get top, mid, & bot rows of ascii art, sprintf'ing each until '\0' or '\n' is reached (if '\n' 
-  // reached, restart the process of getting rows but ONLY for chars AFTER the '\n' in "non_art_buffer")
-  int prior_char_idx = -1, prior_char_length, string_start, newline_or_end, ASNI_IDX, idx, row, i;
-  for(string_start = 0; string_start < total_idxs; ++string_start) {
-    // for each ASCII art row
-    for(row = 0; row < TOTAL_ASCII_ART_ROWS; ++row) { 
-      ASNI_IDX = 0;
-      // up until '\0' or '\n' is reached
-      for(idx = string_start; idx < total_idxs && ascii_art_letter_idxs[idx] != NEWLINE_ART_IDX; ++idx) {
-        
-        // sprintf ANSI esc sequences directly from the non-art string
-        if(ascii_art_letter_idxs[idx] == ANSI_ESC_ART_IDX) {
-          ansi_ptr = &non_art_buffer[ANSI_ESC_IDXS[ASNI_IDX++]];
-          // sprintf the ANSI Esc sequence (text deco/coloring) to the string
-          // => ENABLES USING THIS LIBRARY'S COLORS/TEXT-DECO W/ ASCII ART!
-          while(*ansi_ptr != '\0' && !isalpha(*ansi_ptr)) *p++ = *ansi_ptr++;
-          *p++ = *ansi_ptr++; // sprintf last char in ANSI Esc Sequence
-        
-        // if at a backspace, move back the width of the preceding character
-        } else if(ascii_art_letter_idxs[idx] == BACKSPACE_ART_IDX) {
-          if(prior_char_idx > -1) {
-            prior_char_length = strlen(ASCII_ART_MATIRIX[row][ascii_art_letter_idxs[prior_char_idx]]);
-            for(i = 0; i < prior_char_length; ++i) sprintf(p, "\b"), p += strlen(p);
-            --prior_char_idx;
-          }
-        } else // non-backspace
-          prior_char_idx = idx, 
-          sprintf(p, "%s", ASCII_ART_MATIRIX[row][ascii_art_letter_idxs[idx]]), 
-          p += strlen(p);
-      }
-      newline_or_end = idx, strcpy(p, "\033[0m\n"), p += strlen(p);
-    }
-    string_start = newline_or_end;
-  }
-  *p = '\0';
+// returns whether 'str' points to the particular substring 'substr'
+bool is_at_substring(const char *p, const char *substr) {
+  while(*substr != '\0' && *p != '\0' && *p == *substr) ++p, ++substr;
+  return (*substr == '\0');
 }
 
 
-// fprintf ascii art for "non_art_string" to "fptr"
-static void ascii_art_fprintf_non_art_string(FILE *fptr, char non_art_string[]) {
-  // string to hold ascii art variants of chars in client's "non_art_string"
-  char ascii_art_buffer[MAX_ASCII_ART_BUFFER_LENGTH];
-  FLOOD_ZEROS(ascii_art_buffer, MAX_ASCII_ART_BUFFER_LENGTH);
-  convert_non_art_string_to_ascii_art(non_art_string, ascii_art_buffer);
-  fprintf(fptr, "%s", ascii_art_buffer), fflush(fptr);
+// fills "art_buffer" with "non_art_string"'s chars in ASCII/Whitespace Art
+static void convert_non_art_string_to_alpha_art(char non_art_string[], char art_buffer[], const int TOTAL_ROWS, const char **ALPHA_ART_MATRIX[TOTAL_ROWS]) {
+  const int NEWLINE_ART_IDX = 1; // idx (hash value) of '\n' ASCII art repn
+  bool is_ascii_art = (TOTAL_ROWS == TOTAL_ASCII_ART_ROWS);
+
+  // array of hashed letter idxs for ASCII/Whitespace-art variant's row positions
+  int alpha_art_letter_idxs[MAX_ALPHA_ART_BUFFER_LENGTH];
+  FLOOD_ZEROS(alpha_art_letter_idxs, MAX_ALPHA_ART_BUFFER_LENGTH);
+
+  // convert lowercase letters to uppercase, non_art_buffer holds 
+  // uppercased/formatted "non_art_string" & "art_buffer" holds ascii/whitespace art
+  char non_art_buffer[MAX_ALPHA_ART_BUFFER_LENGTH], *p = art_buffer, *ansi_ptr;
+  FLOOD_ZEROS(non_art_buffer, MAX_ALPHA_ART_BUFFER_LENGTH); 
+  strcpy(non_art_buffer, non_art_string), mk_string_uppercase(non_art_buffer);
+
+  // Idxs of ANSI Esc key instances (ie from using the colors/text-deco above) 
+  // in the client's non-art string
+  int ANSI_ESC_IDXS[ALPHA_ART_ALPHABET_LENGTH], TOTAL_ANSI_ESC_SEQUENCES = 0;
+  FLOOD_ZEROS(ANSI_ESC_IDXS, ALPHA_ART_ALPHABET_LENGTH);
+  char whitespace_art_ANSI_cmd_buffer[MAX_ANSI_CMD_LENGTH], *last_cmd;
+
+  // get hashed idxs of letter ASCII/Whitespace-art variant positions in the "ALPHA_ART_MATRIX"
+  const int total_idxs = get_hashed_art_idxs(alpha_art_letter_idxs, non_art_buffer, ANSI_ESC_IDXS, &TOTAL_ANSI_ESC_SEQUENCES);
+
+  // ANSI buffer to hold user-defined ansi cmds passed for whitespaces (requires special means of splicing them in)
+  FLOOD_ZEROS(whitespace_art_ANSI_cmd_buffer, MAX_ANSI_CMD_LENGTH);
+  strcpy(whitespace_art_ANSI_cmd_buffer, "\033[0m");
+
+  // get each row for the alpha art letters, sprintf'ing each until '\0' or '\n' is reached (if '\n' 
+  // reached, restart the process of getting rows but ONLY for chars AFTER the '\n' in "non_art_buffer")
+  int prior_char_idx = -1, prior_char_length, string_start, newline_or_end, PRIOR_NEWLINE_ANSI_IDX = 0, ASNI_IDX = 0, idx, row, i;
+
+  for(string_start = 0; string_start < total_idxs; ++string_start) {
+    // for each alpha art row
+    // PRIOR_NEWLINE_ANSI_IDX = 0;
+    for(row = 0; row < TOTAL_ROWS; ++row) { 
+      ASNI_IDX = PRIOR_NEWLINE_ANSI_IDX;
+      FLOOD_ZEROS(whitespace_art_ANSI_cmd_buffer, MAX_ANSI_CMD_LENGTH); // reset ANSI codes
+      // up until '\0' or '\n' is reached
+      for(idx = string_start; idx < total_idxs && alpha_art_letter_idxs[idx] != NEWLINE_ART_IDX; ++idx) {
+        
+        // sprintf ANSI esc sequences directly from the non-art string
+        if(alpha_art_letter_idxs[idx] == ANSI_ESC_ART_IDX) {
+          ansi_ptr = &non_art_buffer[ANSI_ESC_IDXS[ASNI_IDX++]];
+          // sprintf the ANSI Esc sequence (text deco/coloring) to the string
+          // => ENABLES USING THIS LIBRARY'S COLORS/TEXT-DECO W/ ALPHA ART!
+          // save ANSI commands passed by user to sprintf for each Whitespace art letter
+          if(is_at_substring(ansi_ptr, reset))
+            FLOOD_ZEROS(whitespace_art_ANSI_cmd_buffer, MAX_ANSI_CMD_LENGTH);
+          last_cmd = &whitespace_art_ANSI_cmd_buffer[strlen(whitespace_art_ANSI_cmd_buffer)];
+
+          // copy ANSI cmds from user into the "whitespace_art_ANSI_cmd_buffer" & the "art_buffer" strings
+          while(*ansi_ptr != '\0' && !isalpha(*ansi_ptr)) *p++ = *ansi_ptr, *last_cmd++ = *ansi_ptr++;
+          *p++ = *ansi_ptr, *last_cmd++ = *ansi_ptr++; // sprintf last char in ANSI Esc Sequence
+          *last_cmd = '\0';
+
+        // if at a backspace, move back the width of the preceding character
+        } else if(alpha_art_letter_idxs[idx] == BACKSPACE_ART_IDX) {
+          if(prior_char_idx > -1) {
+            prior_char_length = strlen(ALPHA_ART_MATRIX[row][alpha_art_letter_idxs[prior_char_idx]]);
+            for(i = 0; i < prior_char_length; ++i) sprintf(p, "\b"), p += strlen(p);
+            --prior_char_idx;
+          }
+        } else { // non-backspace & non-ANSI cmd
+          prior_char_idx = idx;
+          if(is_ascii_art) // don't sprintf ANSI codes into letter for ASCII
+            strcpy(p, ALPHA_ART_MATRIX[row][alpha_art_letter_idxs[idx]]);
+          else
+            sprintf(p, ALPHA_ART_MATRIX[row][alpha_art_letter_idxs[idx]], 
+              whitespace_art_ANSI_cmd_buffer, whitespace_art_ANSI_cmd_buffer, 
+              whitespace_art_ANSI_cmd_buffer, whitespace_art_ANSI_cmd_buffer);
+          p += strlen(p);
+        }
+      }
+      if(row == TOTAL_ROWS - 1) 
+        PRIOR_NEWLINE_ANSI_IDX = ASNI_IDX; // store the last ANSI cmd index to invoke after a '\n'
+      strcpy(p, "\033[0m\n"), // IMPLICIT "RESET" BEFORE '\n' WRT TO ASCII/WHITESPACE ART PRINTING!
+      p += strlen(p), newline_or_end = idx;
+    }
+    string_start = newline_or_end;
+  }
+  strcpy(p, "\033[0m");
+}
+
+
+// fprintf alpha art (ascii or whitespace as per "is_ascii_art" bool) for "non_art_string" to "fptr"
+static void alpha_art_fprintf_non_art_string(FILE *fptr, char non_art_string[], bool is_ascii_art) {
+  // string to hold ascii/whitespace art variants of chars in client's "non_art_string"
+  char alpha_art_buffer[MAX_ALPHA_ART_BUFFER_LENGTH];
+  FLOOD_ZEROS(alpha_art_buffer, MAX_ALPHA_ART_BUFFER_LENGTH);
+  if(is_ascii_art)
+    convert_non_art_string_to_alpha_art(non_art_string, alpha_art_buffer, TOTAL_ASCII_ART_ROWS, ASCII_ART_MATRIX);
+  else
+    convert_non_art_string_to_alpha_art(non_art_string, alpha_art_buffer, TOTAL_WHITESPACE_ART_ROWS, WHITESPACE_ART_MATRIX);
+  fprintf(fptr, "%s", alpha_art_buffer), fflush(fptr);
+}
+
+/******************************************************************************
+* PRIVATE INTERFACES: ASCII/WHITESPACE ART PRINTING/STRLEN MAIN FUNCTIONS
+******************************************************************************/
+
+// fprintf the Alpha Art equivalent of the string to "FPRINTF_ART_FILEPTR",
+// sprintf's 1st to splice in any "%s" (or other) substitutions prior 
+// to converting string to ASCII/Whitespace Art (as per FPRINTF_ART_PRINTING_ASCII bool)
+#define fprintf_art(FPRINTF_ART_PRINTING_ASCII, FPRINTF_ART_FILEPTR, ...) ({\
+  char fprintf_art_non_art_string[MAX_ALPHA_ART_BUFFER_LENGTH];\
+  FLOOD_ZEROS(fprintf_art_non_art_string, MAX_ALPHA_ART_BUFFER_LENGTH);\
+  sprintf(fprintf_art_non_art_string, __VA_ARGS__);\
+  alpha_art_fprintf_non_art_string(FPRINTF_ART_FILEPTR, fprintf_art_non_art_string, FPRINTF_ART_PRINTING_ASCII);\
+})
+
+
+// sprintf the Alpha Art equivalent of the string into "SPRINTF_ART_STR",
+// sprintf's 1st to splice in any "%s" (or other) substitutions prior 
+// to converting string to Alpha Art
+#define sprintf_art(SPRINTF_ART_PRINTING_ASCII, SPRINTF_ART_STR, ...) ({\
+  char sprintf_art_non_art_string[MAX_ALPHA_ART_BUFFER_LENGTH];\
+  FLOOD_ZEROS(sprintf_art_non_art_string, MAX_ALPHA_ART_BUFFER_LENGTH);\
+  sprintf(sprintf_art_non_art_string, __VA_ARGS__);\
+  if(SPRINTF_ART_PRINTING_ASCII)\
+    convert_non_art_string_to_alpha_art(sprintf_art_non_art_string, SPRINTF_ART_STR, TOTAL_ASCII_ART_ROWS, ASCII_ART_MATRIX);\
+  else\
+    convert_non_art_string_to_alpha_art(sprintf_art_non_art_string, SPRINTF_ART_STR, TOTAL_WHITESPACE_ART_ROWS, WHITESPACE_ART_MATRIX);\
+})
+
+
+// "strlen" for Alpha art: returns the length needed to contain 
+// "non_art_string"'s Alpha-art (ascii or whitespace) equivalent
+static int alphaArtStrlen(bool is_ascii_art, char *non_art_string) {
+  char alpha_art_buffer[MAX_ALPHA_ART_BUFFER_LENGTH];
+  FLOOD_ZEROS(alpha_art_buffer, MAX_ALPHA_ART_BUFFER_LENGTH);
+  if(is_ascii_art)
+    convert_non_art_string_to_alpha_art(non_art_string, alpha_art_buffer, TOTAL_ASCII_ART_ROWS, ASCII_ART_MATRIX);
+  else
+    convert_non_art_string_to_alpha_art(non_art_string, alpha_art_buffer, TOTAL_WHITESPACE_ART_ROWS, WHITESPACE_ART_MATRIX);
+  return strlen(alpha_art_buffer);
+}
+
+
+// printf's an entire Alpha art alphabet (demo for library info, like showColors() above)
+static void showAlphaArt(bool is_ascii_art, const int TOTAL_ROWS, const char **ALPHA_ART_MATRIX[TOTAL_ROWS]) {
+  int row, letter, cluster, remaining_letters,
+      cluster_length = (is_ascii_art) ? 13 : 8; // # of letters to print at once
+  if(is_ascii_art)
+    printf("\n\033[1m>> \033[4mASCII Art Alphabet\033[0m\033[1m:\033[0m");
+  else
+    printf("\n\033[1m>> \033[4mWhitespace Art Alphabet\033[0m\033[1m:\033[0m");
+  printf("\n\033[1m   >> \033[4mLower-Case Letters Are Upper-Cased!\033[0m");
+  printf("\n\033[1m   >> \033[4mCharacters Supported\033[0m\033[1m:\033[0m ");
+  printf("!\"#$%%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`{|}~");
+  printf("\n\033[1m   >> \033[4m'Space' & 3 Control Chars Supported\033[0m\033[1m:\033[0m ' ', '\\b', '\\t', '\\n'\033[0m\n\n");
+  // "cluster = 3" to skip ' ', '\t' & '\n',
+  // "ALPHA_ART_ALPHABET_LENGTH - 3" to skip unknown char repn && '\b' && '\033'
+  for(cluster = 3; cluster < ALPHA_ART_ALPHABET_LENGTH - 3; cluster += cluster_length) {
+    // combine the last row of 3 slim chars w/ the 2nd to last row
+    if(cluster + 2 * cluster_length > ALPHA_ART_ALPHABET_LENGTH - 3) cluster_length = 16;
+    remaining_letters = (cluster + cluster_length > ALPHA_ART_ALPHABET_LENGTH - 3)
+                        ? (ALPHA_ART_ALPHABET_LENGTH - 3)
+                        : (cluster + cluster_length);
+    for(row = 0; row < TOTAL_ROWS; ++row) {
+      printf("   ");
+      for(letter = cluster; letter < remaining_letters; ++letter) {
+        if(is_ascii_art)
+          printf("%s", ALPHA_ART_MATRIX[row][letter]);
+        else
+          printf(ALPHA_ART_MATRIX[row][letter], "", "", "", "");
+      }
+      printf("\n");
+    }
+    printf("\n");
+  }
 }
 
 /******************************************************************************
@@ -471,70 +598,49 @@ static void ascii_art_fprintf_non_art_string(FILE *fptr, char non_art_string[]) 
 ******************************************************************************/
 
 
-// NOTE: ALL ASCII ART PRINTING MACROS IMPLICITLY INVOKE "reset" AT THE END
+// NOTE: ASCII/WHITESPACE ART PRINTING MACROS IMPLICITLY INVOKE "reset" AT '\n's AND AT THEIR END
 
 
 // fprintf the ASCII Art equivalent of the string to "FPRINTA_FILEPTR"
-// sprintf's 1st to splice in any "%s" (or other) substitutions prior 
-// to converting string to ASCII Art
-#define fprinta(FPRINTA_FILEPTR, ...) ({\
-  char fprinta_non_art_string[MAX_ASCII_ART_BUFFER_LENGTH];\
-  FLOOD_ZEROS(fprinta_non_art_string, MAX_ASCII_ART_BUFFER_LENGTH);\
-  sprintf(fprinta_non_art_string, __VA_ARGS__);\
-  ascii_art_fprintf_non_art_string(FPRINTA_FILEPTR, fprinta_non_art_string);\
-})
-
-
+#define fprinta(FPRINTA_FILEPTR, ...) fprintf_art(true, FPRINTA_FILEPTR, __VA_ARGS__)
 // sprintf the ASCII Art equivalent of the string into "SPRINTA_STR"
-// sprintf's 1st to splice in any "%s" (or other) substitutions prior 
-// to converting string to ASCII Art
-#define sprinta(SPRINTA_STR, ...) ({\
-  char sprinta_non_art_string[MAX_ASCII_ART_BUFFER_LENGTH];\
-  FLOOD_ZEROS(sprinta_non_art_string, MAX_ASCII_ART_BUFFER_LENGTH);\
-  sprintf(sprinta_non_art_string, __VA_ARGS__);\
-  convert_non_art_string_to_ascii_art(sprinta_non_art_string, SPRINTA_STR);\
-})
+#define sprinta(SPRINTA_STR, ...) sprintf_art(true, SPRINTA_STR, __VA_ARGS__)
+// printf the ASCII Art equivalent of the given string
+#define printa(...) fprintf_art(true, stdout, __VA_ARGS__)
 
-
-// printf the ASCII Art equivalent of the string, 
-#define printa(...) fprinta(stdout, __VA_ARGS__)
-
-
-// "strlen" for ascii art: returns the length needed to contain 
-// "non_art_string"'s ascii-art equivalent
-int artstrlen(char *non_art_string) {
-  char ascii_art_buffer[MAX_ASCII_ART_BUFFER_LENGTH];
-  FLOOD_ZEROS(ascii_art_buffer, MAX_ASCII_ART_BUFFER_LENGTH);
-  convert_non_art_string_to_ascii_art(non_art_string, ascii_art_buffer);
-  return strlen(ascii_art_buffer);
+// return strlen needed to contain "non_art_string" in ASCII art
+int asciiArtStrlen(char *non_art_string) {
+  return alphaArtStrlen(true, non_art_string);
 }
 
-
 // printf's entire ASCII art alphabet (demo for library info, like showColors() above)
-void showAlphabet() {
-  int row, letter, cluster, remaining_letters,
-      cluster_length = 13; // # of letters to print at once
-  printf("\n\033[1m>> \033[4mASCII Art Alphabet\033[0m\033[1m:\033[0m");
-  printf("\n\033[1m   >> \033[4mLower-Case Letters Are Upper-Cased!\033[0m");
-  printf("\n\033[1m   >> \033[4mCharacters Supported\033[0m\033[1m:\033[0m ");
-  printf("!\"#$%%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`{|}~");
-  printf("\n\033[1m   >> \033[4m'Space' & 3 Control Chars Supported\033[0m\033[1m:\033[0m ' ', '\\b', '\\t', '\\n'\033[0m\n\n");
-  // "cluster = 3" to skip ' ', '\t' & '\n',
-  // "ASCII_ART_ALPHABET_LENGTH - 3" to skip unknown char repn && '\b' && '\033'
-  for(cluster = 3; cluster < ASCII_ART_ALPHABET_LENGTH - 3; cluster += cluster_length) {
-    // combine the last row of 3 slim chars w/ the 2nd to last row
-    if(cluster + 2 * cluster_length > ASCII_ART_ALPHABET_LENGTH - 3) cluster_length = 16;
-    remaining_letters = (cluster + cluster_length > ASCII_ART_ALPHABET_LENGTH - 3)
-                        ? (ASCII_ART_ALPHABET_LENGTH - 3)
-                        : (cluster + cluster_length);
-    for(row = 0; row < TOTAL_ASCII_ART_ROWS; ++row) {
-      printf("   ");
-      for(letter = cluster; letter < remaining_letters; ++letter)
-        printf("%s", ASCII_ART_MATIRIX[row][letter]);
-      printf("\n");
-    }
-    printf("\n");
-  }
+void showAsciiArt() {
+  showAlphaArt(true, TOTAL_ASCII_ART_ROWS, ASCII_ART_MATRIX);
+}
+
+/******************************************************************************
+* PUBLIC INTERFACES: WHITESPACE ART PRINTING MACROS/"STRLEN" FOR WHITESPACE ART
+******************************************************************************/
+
+
+// NOTE: ASCII/WHITESPACE ART PRINTING MACROS IMPLICITLY INVOKE "reset" AT '\n's AND AT THEIR END
+
+
+// fprintf the Whitespace Art equivalent of the string to "FPRINTW_FILEPTR"
+#define fprintw(FPRINTW_FILEPTR, ...) fprintf_art(false, FPRINTW_FILEPTR, __VA_ARGS__)
+// sprintf the Whitespace Art equivalent of the string into "SPRINTW_STR"
+#define sprintw(SPRINTW_STR, ...) sprintf_art(false, SPRINTW_STR, __VA_ARGS__)
+// printf the Whitespace Art equivalent of the given string
+#define printw(...) fprintf_art(false, stdout, __VA_ARGS__)
+
+// return strlen needed to contain "non_art_string" in Whitespace art
+int whitespaceArtStrlen(char *non_art_string) {
+  return alphaArtStrlen(false, non_art_string);
+}
+
+// printf's entire Whitespace art alphabet (demo for library info, like showColors() above)
+void showWhitespaceArt() {
+  showAlphaArt(false, TOTAL_WHITESPACE_ART_ROWS, WHITESPACE_ART_MATRIX);
 }
 
 #endif
