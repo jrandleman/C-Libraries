@@ -1,6 +1,6 @@
 # Color.h
 ## _Color Text & Background, Decorate Text, & Manipulate the Cursor in Terminal!_
-## _Also Output String ASCII Art Equivalents in Terminal!_
+## _Also Output String ASCII/Whitespace Art Equivalents in Terminal!_
 ### _Friendlier C & C++ Interface for ANSI Escape Codes!_
 -----------
 ## Using `color.h`:
@@ -19,8 +19,11 @@ int main() {
   rprintf("%sHello Again!", bold blue); 
   
   // "printf" but outputting the the string using ASCII art for its characters (in red font)
-  // NOTE: ASCII art printing fcns implicitly invoke "reset" at the end
+  // NOTE: ASCII/WHITESPACE ART PRINTING MACROS IMPLICITLY INVOKE "reset" AT '\n's AND AT THEIR END
   printa("%sGood%s!", red6, "bye");
+  
+  // "printf" but outputting the the string using Whitespace art for its characters (in cyan font)
+  printw("%s My%s!", red6, " guy!");
   
   return 0;
 }
@@ -40,8 +43,12 @@ int main() {
   std::cout << bold line blue "Hello" << color::rendl << " Again!\n";
   
   // "printf" but outputting the the string using ASCII art for its characters (in red font)
-  // NOTE: ASCII art printing fcns implicitly invoke "reset" at the end
+  // NOTE: ASCII/WHITESPACE ART PRINTING MACROS IMPLICITLY INVOKE "reset" AT '\n's AND AT THEIR END
   printa("%sGood%s!", red6, "bye");
+  
+  // "printf" but outputting the the string using Whitespace art for its characters (in cyan font)
+  printw("%s My%s!", red6, " guy!");
+  
   return 0;
 }
 ```
@@ -105,7 +112,7 @@ int main() {
 
 -----------
 ## `color.h` ASCII Art Output Replacements:
-
+ * ***NOTE: ASCII/Whitespace art printing macros implicitly invoke `reset` at any `\n` & the end of the string!***
 ### printf, sprintf, fprintf:
 * _Use_ `printa`_,_ `sprinta`_, &_ `fprinta` _instead to output the ASCII-Art Equivalent String_
 ```c
@@ -122,12 +129,12 @@ printa("enjoy color.h!");
 
 
 ### strlen
-* _Use_ `artstrlen` _instead to see the length that the string's ASCII art equivalent_
+* _Use_ `asciiArtStrlen` _instead to see the length that the string's ASCII art equivalent_
 
 ### Outputting `color.h`'s ASCII Art Alphabet:
-`showAlphabet()`_: printf's all of_ `color.h`_'s supported ASCII art characters!_
+`showAsciiArt()`_: printf's all of_ `color.h`_'s supported ASCII art characters!_
 ```c
-showAlphabet();
+showAsciiArt();
 /*
  * OUTPUT:
  *
@@ -153,9 +160,26 @@ showAlphabet();
  *
  */
 ```
-
 -----------
-## `color.h` ASCII Art Supported Characters:
+## `color.h` Whitespace Art Output Replacements:
+
+### printf, sprintf, fprintf:
+* _Use_ `printw`_,_ `sprintw`_, &_ `fprintw` _instead to output the Whitespace-Art Equivalent String_
+```c
+printw("enjoy color.h!");
+```
+
+
+### strlen
+* _Use_ `whitespaceArtStrlen` _instead to see the length that the string's Whitespace art equivalent_
+
+### Outputting `color.h`'s Whitespace Art Alphabet:
+`showWhitespaceArt()`_: printf's all of_ `color.h`_'s supported Whitespace art characters!_
+```c
+showWhitespaceArt();
+```
+-----------
+## `color.h` ASCII & Whitespace Art Supported Characters:
 ### Lower-Case Letters Are Converted To Upper-Case!
 ```c
 "hello!" // becomes: "HELLO!"
@@ -171,4 +195,5 @@ showAlphabet();
 ### As Well As All Colors/Text Decorations This Library Has To Offer!
 ```c
 printa("%shello!\n", cyan6 rev bold);
+printw("%slater!\n", green5);
 ```
