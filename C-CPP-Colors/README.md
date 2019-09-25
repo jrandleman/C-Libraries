@@ -168,7 +168,7 @@ showAsciiArt();
 ```c
 printw("enjoy color.h!");
 ```
-
+![image of "enjoy color.h!" in whitespace art](https://github.com/jrandleman/C-Libraries/blob/master/C-CPP-Colors/ENJOY_COLOR_H_whitespaceArt.png)
 
 ### strlen
 * _Use_ `whitespaceArtStrlen` _instead to see the length that the string's Whitespace art equivalent_
@@ -178,6 +178,8 @@ printw("enjoy color.h!");
 ```c
 showWhitespaceArt();
 ```
+![image of "showWhitespaceArt()" output](https://github.com/jrandleman/C-Libraries/blob/master/C-CPP-Colors/SHOW_WHITESPACE_ART_whitespaceArt.png)
+
 -----------
 ## `color.h` ASCII & Whitespace Art Supported Characters:
 ### Lower-Case Letters Are Converted To Upper-Case!
