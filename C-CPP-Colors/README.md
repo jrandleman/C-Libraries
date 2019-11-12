@@ -108,7 +108,11 @@ int main() {
 
 
 ### \*Outputting All of `color.h`'s Text & Background Colors (function):
-`showColors()`_: printf's all of_ `color.h`_'s basic/gradient text & background colors!_
+`showColors()`_: printf's all of_ `color.h`_'s basic/gradient text & background colors!_</br>
+```c
+showColors();
+```
+![image of "showColors()" function output](https://github.com/jrandleman/C-Libraries/blob/master/C-CPP-Colors/showColors_fcn_C_CPP_Colors_Demo.png)
 
 -----------
 ## `color.h` ASCII Art Output Replacements:
