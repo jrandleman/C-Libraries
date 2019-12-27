@@ -6,6 +6,20 @@
 // 1) http://www.lihaoyi.com/post/BuildyourownCommandlinewithANSIescapecodes.html
 // 2) http://www.climagic.org/mirrors/VT100_Escape_Codes.html
 
+
+/*
+ * NAMING CONVENTIONS IN COLOR.H:
+ *   (1) PRINTING & COLORS (fprinta, magenta, etc): alllowercase
+ *   (2) MULTIPLE WORDS (keyUp, showAsciiArt, etc): camelCase
+ *   (3) SINGLE NON-COLOR WORD (Reset, Bold, Line): Capitalized
+ *
+ * => CAPITALIZATION REASONING: 
+ *    colors are considered reserved in color.h (shocker), BUT words like 
+ *    "clear" and "Reset" have a place in C++'s STL, hence they have been 
+ *    given a capital letter to not expand "my_vector.clear()". 
+ */
+
+
 #ifndef COLOR_H_
 #define COLOR_H_
 
@@ -15,7 +29,7 @@
 #include <string.h>
 
 /******************************************************************************
-* PUBLIC INTERFACES: C++ std::endl ALTERNATIVE: "reset" + "\n"
+* PUBLIC INTERFACES: C++ std::endl ALTERNATIVE: "Reset" + "\n"
 ******************************************************************************/
 
 #ifdef __cplusplus
@@ -24,10 +38,10 @@ namespace color { const char* rendl = "\033[0m\n"; }
 #endif
 
 /******************************************************************************
-* PUBLIC INTERFACES: OUTPUT + RESET SYNTAX
+* PUBLIC INTERFACES: OUTPUT + RESET STYLE
 ******************************************************************************/
 
-// output macros automatically 'r'esetting SYNTAX after output
+// output macros automatically 'r'esetting STYLE after output
 #define rprintf(...) ({printf(__VA_ARGS__);printf("\033[0m");fflush(stdout);})
 #define rsprintf(RS_STR, ...)\
   ({sprintf(RS_STR, __VA_ARGS__);sprintf(&RS_STR[strlen(RS_STR)], "\033[0m");})
@@ -40,34 +54,34 @@ namespace color { const char* rendl = "\033[0m\n"; }
 ******************************************************************************/
 
 // move the cursor up, down, left, & right "MOVE_AMOUNT" positions
-#define keyup(MOVE_AMOUNT)    "\033[" #MOVE_AMOUNT "A"
-#define keydown(MOVE_AMOUNT)  "\033[" #MOVE_AMOUNT "B"
-#define keyright(MOVE_AMOUNT) "\033[" #MOVE_AMOUNT "C"
-#define keyleft(MOVE_AMOUNT)  "\033[" #MOVE_AMOUNT "D"
+#define keyUp(MOVE_AMOUNT)    "\033[" #MOVE_AMOUNT "A"
+#define keyDown(MOVE_AMOUNT)  "\033[" #MOVE_AMOUNT "B"
+#define keyRight(MOVE_AMOUNT) "\033[" #MOVE_AMOUNT "C"
+#define keyLeft(MOVE_AMOUNT)  "\033[" #MOVE_AMOUNT "D"
 
 /******************************************************************************
-* PUBLIC INTERFACES: RESET SYNTAX / CLEAR SCREEN
+* PUBLIC INTERFACES: RESET STYLE / CLEAR SCREEN
 ******************************************************************************/
 
-// reset syntax settings
-#define reset "\033[0m"
+// reset style settings
+#define Reset "\033[0m"
 
 // clear current screen
-#define clear "\033[2J"
+#define Clear "\033[2J"
 
 /******************************************************************************
 * PUBLIC INTERFACES: TEXT DECORATION - BOLD, UNDERLINE, REVERSE BACKGROUND/TEXT COLORS
 ******************************************************************************/
 
 // bold, underline, & reverse background/text colors
-#define bold  "\033[1m" 
-#define line  "\033[4m"
-#define rev   "\033[7m"
+#define Bold  "\033[1m" 
+#define Line  "\033[4m"
+#define Rev   "\033[7m"
 // decoration combinations named alphabetically
-#define boldline    bold line
-#define boldrev     bold rev
-#define linerev     line rev
-#define boldlinerev bold line rev
+#define boldLine    Bold Line
+#define boldRev     Bold Rev
+#define lineRev     Line Rev
+#define boldLineRev Bold Line Rev
 
 /******************************************************************************
 * PUBLIC INTERFACES: TEXT COLORS
@@ -273,17 +287,17 @@ void showColors() {
 
   // OUTPUT BASIC COLORS
   int i, j;
-  rprintf("\n%s>> %sBasic 8 Colors:\n%s  bblack ", bold, line,
-    reset white8 bblack);
+  rprintf("\n%s>> %sBasic 8 Colors:\n%s  bblack ", Bold, Line,
+    Reset white8 bblack);
   for(i = 1; i < 8; ++i) // output basic background colors
     rprintf("%s\033[4%dm%s ", black, i, basic_background_colors[i]);
-  rprintf("\n%s   black ", reset black);
+  rprintf("\n%s   black ", Reset black);
   for(i = 1; i < 8; ++i) // output basic text colors
     rprintf("\033[3%dm%s ", i, basic_text_colors[i]);
   
 
   // OUTPUT COLOR GRADIENTS
-  rprintf("\n\n%s>> %sExtended Color Gradients:\n", bold, line);
+  rprintf("\n\n%s>> %sExtended Color Gradients:\n", Bold, Line);
   for(i = 0; i < 8; ++i) { // output background color gradients
     for(j = 0; j < 8; ++j)
       (i == 0)
@@ -467,7 +481,7 @@ static void convert_non_art_string_to_alpha_art(char non_art_string[], char art_
           // sprintf the ANSI Esc sequence (text deco/coloring) to the string
           // => ENABLES USING THIS LIBRARY'S COLORS/TEXT-DECO W/ ALPHA ART!
           // save ANSI commands passed by user to sprintf for each Whitespace art letter
-          if(is_at_substring(ansi_ptr, reset))
+          if(is_at_substring(ansi_ptr, Reset))
             FLOOD_ZEROS(whitespace_art_ANSI_cmd_buffer, MAX_ANSI_CMD_LENGTH);
           last_cmd = &whitespace_art_ANSI_cmd_buffer[strlen(whitespace_art_ANSI_cmd_buffer)];
 
@@ -594,11 +608,99 @@ static void showAlphaArt(bool is_ascii_art, const int TOTAL_ROWS, const char **A
 }
 
 /******************************************************************************
+* PRIVATE INTERFACES: ASCII/WHITESPACE ART RAW STRING GENERATION
+******************************************************************************/
+
+// Generates a raw-string version of the art that can be copied/output anywhere
+// => Hence ALL of color.h need not be #include'd just to print out a single
+//    stylized message, simply use the library to generate the message then 
+//    cpy/paste it into your other program.
+static void get_raw_art_string(const char *non_art_string, char *raw_art_string_buffer, bool print_ascii) {
+  // Copy const char arg to a char buffer
+  char non_art_buffer[MAX_ALPHA_ART_BUFFER_LENGTH];
+  FLOOD_ZEROS(non_art_buffer, MAX_ALPHA_ART_BUFFER_LENGTH); 
+  strcpy(non_art_buffer, non_art_string), mk_string_uppercase(non_art_buffer);
+
+  // Declare & prep buffer to hold raw art string
+  char alpha_art_buffer[MAX_ALPHA_ART_BUFFER_LENGTH];
+  FLOOD_ZEROS(alpha_art_buffer, MAX_ALPHA_ART_BUFFER_LENGTH);
+
+  // Get ASCII or Whitespace art string (as needed)
+  sprintf_art(print_ascii, alpha_art_buffer, "%s", non_art_buffer);
+
+  // Pointers to read the art buffer & write the raw version to the 
+  // raw-art-string buffer
+  char *write_to = raw_art_string_buffer, *read_from = alpha_art_buffer;
+
+  while(*read_from != '\0') {
+    // Escape ANSI escape character in charge of formatting terminal font
+    if(*read_from == '\033') {
+      *write_to++ = '\\';
+      *write_to++ = '0';
+      *write_to++ = '3';
+      *write_to++ = '3';
+      ++read_from;
+    } 
+
+    // Escape Back-slashes
+    if(*read_from == '\\') *write_to++ = '\\';
+
+    // Escape the designated cntrl characters allowed by the ASCII & Whitespace
+    // art printing fcns
+    if(*read_from == '\n' || *read_from == '\t' || *read_from == '\b') {
+      *write_to++ = '\\';
+      switch(*read_from) {
+        case '\n': *write_to++ = 'n'; break;
+        case '\t': *write_to++ = 't'; break;
+        case '\b': *write_to++ = 'b'; break;
+      }
+      ++read_from;
+      continue;
+    }
+
+    *write_to++ = *read_from++; // Copy the char
+  }
+  *read_from = '\0';
+}
+
+
+// Handles raw string generation, THE MAIN CONTROLLER as to whether the raw str
+// ought to be printed to a file or to another str, and whether to use ASCII or
+// Whitespace art.
+static void handle_raw_string(char *styled_non_art_string, char *write_to, FILE *fptr, bool print_ascii, bool print_to_file) {
+  char raw_art_string_buffer[MAX_ALPHA_ART_BUFFER_LENGTH];
+  FLOOD_ZEROS(raw_art_string_buffer, MAX_ALPHA_ART_BUFFER_LENGTH);
+  get_raw_art_string(styled_non_art_string,raw_art_string_buffer,print_ascii);
+  if(print_to_file)
+    fprintf(fptr,"%s\n",raw_art_string_buffer), fflush(fptr);
+  else
+    sprintf(write_to, "%s", raw_art_string_buffer);
+}
+
+
+// fprintf the RAW ASCII/WHITESPACE Art equivalent of the string to "FPRINT_RAW_FILEPTR"
+#define fprint_raw_art(FPRINT_RAW_FILEPTR,FPRINT_ASCII,...)({\
+  char fprint_raw_styled_non_art_string[MAX_ALPHA_ART_BUFFER_LENGTH];\
+  FLOOD_ZEROS(fprint_raw_styled_non_art_string, MAX_ALPHA_ART_BUFFER_LENGTH);\
+  sprintf(fprint_raw_styled_non_art_string, __VA_ARGS__);\
+  handle_raw_string(fprint_raw_styled_non_art_string,NULL,FPRINT_RAW_FILEPTR,FPRINT_ASCII,true);\
+})
+
+
+// sprintf the RAW ASCII/WHITESPACE Art equivalent of the string to "SPRINT_RAW_STR"
+#define sprintf_raw_art(SPRINT_RAW_STR,SPRINT_ASCII,...)({\
+  char sprint_raw_styled_non_art_string[MAX_ALPHA_ART_BUFFER_LENGTH];\
+  FLOOD_ZEROS(sprint_raw_styled_non_art_string, MAX_ALPHA_ART_BUFFER_LENGTH);\
+  sprintf(sprint_raw_styled_non_art_string, __VA_ARGS__);\
+  handle_raw_string(sprint_raw_styled_non_art_string,SPRINT_RAW_STR,stdout,SPRINT_ASCII,false);\
+})
+
+/******************************************************************************
 * PUBLIC INTERFACES: ASCII ART PRINTING MACROS & "STRLEN" FOR ASCII ART
 ******************************************************************************/
 
 
-// NOTE: ASCII/WHITESPACE ART PRINTING MACROS IMPLICITLY INVOKE "reset" AT '\n's AND AT THEIR END
+// NOTE: ASCII/WHITESPACE ART PRINTING MACROS IMPLICITLY INVOKE "Reset" AT '\n's AND AT THEIR END
 
 
 // fprintf the ASCII Art equivalent of the string to "FPRINTA_FILEPTR"
@@ -608,9 +710,21 @@ static void showAlphaArt(bool is_ascii_art, const int TOTAL_ROWS, const char **A
 // printf the ASCII Art equivalent of the given string
 #define printa(...) fprintf_art(true, stdout, __VA_ARGS__)
 
+
+// fprintf the RAW ASCII Art equivalent of the string to "FPRINTA_FILEPTR"
+#define fprinta_raw(FPRINTA_FILEPTR, ...) fprint_raw_art(FPRINTA_FILEPTR,true,__VA_ARGS__)
+// sprintf the RAW ASCII Art equivalent of the string into "SPRINTA_STR"
+#define sprinta_raw(SPRINTA_STR, ...) sprintf_raw_art(SPRINTA_STR,true,__VA_ARGS__)
+// printf the RAW ASCII Art equivalent of the given string
+#define printa_raw(...) fprint_raw_art(stdout,true,__VA_ARGS__)
+
+
 // return strlen needed to contain "non_art_string" in ASCII art
-int asciiArtStrlen(char *non_art_string) {
-  return alphaArtStrlen(true, non_art_string);
+int asciiArtStrlen(const char *non_art_string) {
+  char sprintf_art_non_art_string[MAX_ALPHA_ART_BUFFER_LENGTH];
+  FLOOD_ZEROS(sprintf_art_non_art_string, MAX_ALPHA_ART_BUFFER_LENGTH);
+  strcpy(sprintf_art_non_art_string, non_art_string);
+  return alphaArtStrlen(true, sprintf_art_non_art_string);
 }
 
 // printf's entire ASCII art alphabet (demo for library info, like showColors() above)
@@ -623,7 +737,8 @@ void showAsciiArt() {
 ******************************************************************************/
 
 
-// NOTE: ASCII/WHITESPACE ART PRINTING MACROS IMPLICITLY INVOKE "reset" AT '\n's AND AT THEIR END
+// NOTE: ASCII/WHITESPACE ART PRINTING MACROS IMPLICITLY INVOKE "Reset" AT '\n's AND AT THEIR END
+// NOTE: NEVER USER "Rev" WITH WHITESPACE ART !!!
 
 
 // fprintf the Whitespace Art equivalent of the string to "FPRINTW_FILEPTR"
@@ -633,9 +748,21 @@ void showAsciiArt() {
 // printf the Whitespace Art equivalent of the given string
 #define printw(...) fprintf_art(false, stdout, __VA_ARGS__)
 
+
+// fprintf the RAW Whitespace Art equivalent of the string to "FPRINTW_FILEPTR"
+#define fprintw_raw(FPRINTW_FILEPTR, ...) fprint_raw_art(FPRINTW_FILEPTR,false,__VA_ARGS__)
+// sprintf the RAW Whitespace Art equivalent of the string into "SPRINTW_STR"
+#define sprintw_raw(SPRINTW_STR, ...) sprintf_raw_art(SPRINTW_STR,false,__VA_ARGS__)
+// printf the RAW Whitespace Art equivalent of the given string
+#define printw_raw(...) fprint_raw_art(stdout,false,__VA_ARGS__)
+
+
 // return strlen needed to contain "non_art_string" in Whitespace art
-int whitespaceArtStrlen(char *non_art_string) {
-  return alphaArtStrlen(false, non_art_string);
+int whitespaceArtStrlen(const char *non_art_string) {
+  char sprintf_art_non_art_string[MAX_ALPHA_ART_BUFFER_LENGTH];
+  FLOOD_ZEROS(sprintf_art_non_art_string, MAX_ALPHA_ART_BUFFER_LENGTH);
+  strcpy(sprintf_art_non_art_string, non_art_string);
+  return alphaArtStrlen(false, sprintf_art_non_art_string);
 }
 
 // printf's entire Whitespace art alphabet (demo for library info, like showColors() above)
