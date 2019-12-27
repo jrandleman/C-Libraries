@@ -60,9 +60,9 @@ int main() {
 -----------
 ## `color.h` Coloring & Decoration (_All Macros_*):
 ### O/P:
-**1)** `rprintf(...)` _=_ `printf(...); printf(reset);`</br>
-**2)** `rsprintf(str, ...)` _=_ `sprintf(str, ...); sprintf(&str[strlen(str)], reset);`</br>
-**3)** `rfprintf(filename, ...)` _=_ `fprintf(filename, ...); fprintf(filename, reset);`
+**1)** `rprintf(...)` _=_ `printf(...); printf(Reset);`</br>
+**2)** `rsprintf(str, ...)` _=_ `sprintf(str, ...); sprintf(&str[strlen(str)], Reset);`</br>
+**3)** `rfprintf(filename, ...)` _=_ `fprintf(filename, ...); fprintf(filename, Reset);`
 * _**Note:** when compiled as C++,_ `color.h` _activates its_ `color` _namespace's_ `rendl` _alternative to_ `std::endl` _!_
 
 ### Cursor Movement (_Creates a String Literal_):
