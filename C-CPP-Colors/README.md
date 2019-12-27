@@ -1,10 +1,15 @@
 # Color.h
-## _Color Text & Background, Decorate Text, & Manipulate the Cursor in Terminal!_
-## _Also Output String ASCII/Whitespace Art Equivalents in Terminal!_
+## _1) Stylize Terminal Output via Colors & Text Decoration!_
+## _2) Generate a String's ASCII/Whitespace Art Equivalent!_
+## _3) Generate a String's ASCII/Whitespace Art Raw String for External Use!_
 ### _Friendlier C & C++ Interface for ANSI Escape Codes!_
 -----------
 ## Using `color.h`:
-* _**Note:** syntax styles are all string literal macros, thus adjacent instances concatenate into a single string!_
+* _**Note:** font styles are all string literal macros, thus adjacent instances concatenate into a single string!_</br>
+### Naming Conventions:
+  1) _**Printing Functions & Color Names** (`fprinta`, `magenta`, etc):_ **alllowercase**</br>
+  2) _**Multi-Word Functions** (`keyUp`, `showAsciiArt`, etc):_ **camelCase**</br>
+  3) _**Single Non-Color Word** (`Reset`, `Bold`, `Line`, etc):_ **Capitalized**
 ### _Via C:_
 ```c
 #include <stdio.h>
@@ -13,10 +18,10 @@
 
 int main() {
   // print "Hello There" in bold/blue text, then reset the font styles
-  printf("%sHello There!%s", bold blue, reset); 
+  printf("%sHello There!%s", Bold blue, Reset); 
   
   // "rprintf" = "printf" but 'r'esets fonts automatically at the end!
-  rprintf("%sHello Again!", bold blue); 
+  rprintf("%sHello Again!", Bold blue); 
   
   // "printf" but outputting the the string using ASCII art for its characters (in red font)
   // NOTE: ASCII/WHITESPACE ART PRINTING MACROS IMPLICITLY INVOKE "reset" AT '\n's AND AT THEIR END
@@ -36,11 +41,11 @@ int main() {
 int main() {
   // output bold/underlined blue text
   // note that the macros automatically concat w/ the string literal!
-  std::cout << bold line blue "Hello" reset " There!" << std::endl;
+  std::cout << Bold Line blue "Hello" Reset " There!" << std::endl;
   
   // compiling as C++ activates the "color" namespace & its "rendl" 
   // alternative to "std::endl" (acts as: reset + "\n")
-  std::cout << bold line blue "Hello" << color::rendl << " Again!\n";
+  std::cout << Bold Line blue "Hello" << color::rendl << " Again!\n";
   
   // "printf" but outputting the the string using ASCII art for its characters (in red font)
   // NOTE: ASCII/WHITESPACE ART PRINTING MACROS IMPLICITLY INVOKE "reset" AT '\n's AND AT THEIR END
@@ -61,21 +66,21 @@ int main() {
 * _**Note:** when compiled as C++,_ `color.h` _activates its_ `color` _namespace's_ `rendl` _alternative to_ `std::endl` _!_
 
 ### Cursor Movement (_Creates a String Literal_):
-**1)** `keyup(MOVE_AMOUNT)`_: Moves cursor_ `MOVE_AMOUNT` _lines up_</br>
-**2)** `keydown(MOVE_AMOUNT)`_: Moves cursor_ `MOVE_AMOUNT` _lines down_</br>
-**3)** `keyright(MOVE_AMOUNT)`_: Moves cursor_ `MOVE_AMOUNT` _spaces right_</br>
-**4)** `keyleft(MOVE_AMOUNT)`_: Moves cursor_ `MOVE_AMOUNT` _spaces left_</br>
+**1)** `keyUp(MOVE_AMOUNT)`_: Moves cursor_ `MOVE_AMOUNT` _lines up_</br>
+**2)** `keyDown(MOVE_AMOUNT)`_: Moves cursor_ `MOVE_AMOUNT` _lines down_</br>
+**3)** `keyRight(MOVE_AMOUNT)`_: Moves cursor_ `MOVE_AMOUNT` _spaces right_</br>
+**4)** `keyLeft(MOVE_AMOUNT)`_: Moves cursor_ `MOVE_AMOUNT` _spaces left_</br>
 * _**Note:** passed to any means of output (ie_ `printf()` _,_ `std::cout` _, etc.) as if a color or decoration!_
 
-### Resetting Syntax & Clearing Terminal's Screen:
-**1)** `reset`_: String literal resetting Terminal's syntax styles_</br>
-**2)** `clear`_: String literal clearing Terminal's screen (exactly like_ `clear` _in the cmd line)_</br>
-* _**Note:** colors/decoration remain active in Terminal until passed_ `reset` _!_
+### Resetting Styles & Clearing Terminal's Screen:
+**1)** `Reset`_: String literal resetting Terminal's font styles_</br>
+**2)** `Clear`_: String literal clearing Terminal's screen (exactly like_ `clear` _in the cmd line)_</br>
+* _**Note:** colors/decoration remain active in Terminal until passed_ `Reset` _!_
 
 ### Text Decoration (_Creates a String Literal_):
-**1)** `bold`_: Bold text_</br>
-**2)** `line`_: Underlined text_</br>
-**3)** `rev`_: Reverse the current background & text colors_
+**1)** `Bold`_: Bold text_</br>
+**2)** `Line`_: Underlined text_</br>
+**3)** `Rev`_: Reverse the current background & text colors_
 
 ### Text Colors (_8 Basic Colors (headers) & 8 Gradients Each (columns)!_):
 * _**Note:** gradients go from darkest (1) to brightest (8)!_</br>
@@ -116,9 +121,13 @@ showColors();
 
 -----------
 ## `color.h` ASCII Art Output Replacements:
- * ***NOTE: ASCII/Whitespace art printing macros implicitly invoke `reset` at any `\n` & the end of the string!***
+ * ***NOTE: ASCII/Whitespace art printing macros implicitly invoke `reset` at any `\n` & the end of the string!***</br>
+ * ***NOTE: NEVER use `Rev` Text Deco. w/ Whitespace art (as whitespace IS the background)!***
 ### printf, sprintf, fprintf:
-* _Use_ `printa`_,_ `sprinta`_, &_ `fprinta` _instead to output the ASCII-Art Equivalent String_
+* _Use_ `printa`_,_ `sprinta`_, &_ `fprinta` _instead to output the ASCII-Art Equivalent String_</br>
+* _Use_ `printa_raw`_,_ `sprinta_raw`_, &_ `fprinta_raw` _to output the **RAW** ASCII-Art Equivalent String_</br>
+  * _"Raw Strings" are Art strings too, BUT w/ their control chars escaped!_
+  * _Thus "Raw Strings" can be cpy/pasted into any other program to use styled messages w/o `color.h`!_
 ```c
 printa("enjoy color.h!");
 /*
@@ -169,6 +178,9 @@ showAsciiArt();
 
 ### printf, sprintf, fprintf:
 * _Use_ `printw`_,_ `sprintw`_, &_ `fprintw` _instead to output the Whitespace-Art Equivalent String_
+* _Use_ `printw_raw`_,_ `sprintw_raw`_, &_ `fprintw_raw` _to output the **RAW** Whitespace-Art Equivalent String_</br>
+  * _"Raw Strings" are Art strings too, BUT w/ their control chars escaped!_
+  * _Thus "Raw Strings" can be cpy/pasted into any other program to use styled messages w/o `color.h`!_
 ```c
 printw("enjoy color.h!");
 ```
@@ -200,6 +212,6 @@ showWhitespaceArt();
 ```
 ### As Well As All Colors/Text Decorations This Library Has To Offer!
 ```c
-printa("%shello!\n", cyan6 rev bold);
+printa("%shello!\n", cyan6 Rev Bold);
 printw("%slater!\n", green5);
 ```
